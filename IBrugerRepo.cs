@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace RoskildeDyreinternat
 {
-    internal interface IBrugerRepo
+    public interface IBrugerRepo
     {
+        void OpretKunde(Kunde kunde);
+        void OpretMedarbejder(Medarbejder medarbejder);
+        void OpdaterKundeInfo(int id, string navn, string email, string telefon, string adresse);
+        void SletKunde(int id);
+        void VisBrugerRolle(int id);
+        void VisBrugerInfo(int id);
     }
 }
