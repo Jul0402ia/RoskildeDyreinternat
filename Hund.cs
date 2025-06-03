@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace RoskildeDyreinternat
 {
+ 
         public class Hund : Dyr
     {
         // Private fields med lille begyndelsesbogstav
@@ -48,5 +49,5 @@ namespace RoskildeDyreinternat
     }
 }
 
-    
-
+    }
+}

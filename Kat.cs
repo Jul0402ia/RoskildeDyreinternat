@@ -34,7 +34,7 @@ namespace RoskildeDyreinternat
             set { this.skalVæreIndekat = value; }
         }
         //den printer alt info om kat
-        public override string PrintAltInfo()// <- krævet af abstract base class
+        public override string ToString()
         {
             return $"Navn: {Navn}\nRace: {Race}\nChipnummer: {Chipnummer}\nKøn: {Køn}\nAlder{Alder}\nHelbredstilstand {Helbredstilstand}\nErAdopteret {ErAdopteret}\nKanMedAndreHunde{KanMedAndreKatte}\nSkalVæreIndekat{SkalVæreIndekat}";
         }
