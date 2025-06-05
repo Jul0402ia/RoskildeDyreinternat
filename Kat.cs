@@ -40,10 +40,15 @@ namespace RoskildeDyreinternat
         }
 
         //den laver lyd 
-        public override string Lavlyd()
+        public override string LavLyd()
         {
             return "Katten siger: Miau!";
         }
-    }
+        //skal bruges til AddKat (sikkerhed for at den samme kat ikke bliver tilføjet flere gange) 
+        public override int GetChipnummer()
+        {
+            return Chipnummer;
+        }
 
+    }
 }

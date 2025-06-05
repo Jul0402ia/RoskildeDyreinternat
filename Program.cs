@@ -9,10 +9,26 @@
             // Opretter en ny instans af KundeRepo
             var besøgRepo = new BesøgRepo();
             var brugerRepo = new BrugerRepo(besøgRepo);
+            brugerRepo.OpretKunde(kunde1);
+            brugerRepo.OpretKunde(kunde2);
 
 
-            DyrRepo dyrRepo = new DyrRepo();
+            DyrRepo repo = new DyrRepo();
 
+                repo.dyrDictionary.Add(1, new Hund(true, true, "Stella", "race", 1, "hun", 3, "sund", false));
+                repo.dyrDictionary.Add(2, new Hund(true, false, "Bob", "ukendt", 3, "han", 2, "sund", false));
+                repo.dyrDictionary.Add(3, new Hund(false, false, "Dennis", "ukendt", 2, "han", 6, "mangler et ben", false));
+
+                repo.dyrDictionary.Add(99, new Kat(true, true, "Denas", "Siamese", 99, "han", 5, "Sund", false));
+                repo.dyrDictionary.Add(98, new Kat(true, false, "Hansen", "Norsk Skovkat", 98, "hun", 2, "Mangler et øje", false));
+                repo.dyrDictionary.Add(97, new Kat(false, true, "Emil", "Maine Coon", 97, "han", 12, "Har sukkersyge", false));
+
+                foreach (var entry in repo.dyrDictionary)
+                {
+                    Console.WriteLine($"ID: {entry.Key}, Navn: {entry.Value.Navn}");
+                    Console.WriteLine(entry.Value.LavLyd());
+                }
+            }
 
             //Dette er de kunder, der er oprettet
             Kunde kunde1 = new Kunde(99, "Ida", "IdaEmail", "1234567", "Højvej 1", "Kunde", 23, "Mand");
@@ -26,44 +42,32 @@
             Medarbejder medarbejder2 = new Medarbejder(2, "Emma", "emma@kat.dk", "+45 34 34 34 34", "Gladvej 2", "Medarbejder", "Dyrpasser", 37);
             Medarbejder medarbejder3 = new Medarbejder(3, "Erik", "erik@doctor.dk", "+45 11 11 22 22", "Flotvej 63", "Medarbejder", "Dyrlæge", 35);
 
-            //Oprettede dyr nedenunder:
 
-            ////Dette er de hunde, der er oprettet
-            Hund hund1 = new Hund(true, true, "Stella", "race", 1, "hun", 3, "sund", false);
-            Hund hund2 = new Hund(false, false, "Dennis", "ukendt", 2, "han", 6, "mangler et ben", false);
-            Hund hund3 = new Hund(true, false, "Bob", "ukendt", 3, "han", 2, "sund", false);
-
-
-            //Dette er de katte, der er oprettet
-            Kat kat1 = new Kat(true, true, "Denas", "Siamese", 123, "han", 5, "Sund", false);
-            Kat kat2 = new Kat(true, false, "Hansen", "Norsk Skovkat", 456, "hun", 2, "Mangler et øje", false);
-            Kat kat3 = new Kat(false, true, "Emil", "Maine Coon", 789, "han", 12, "Har sukkersyge", false);
-
-
-            brugerRepo.OpretKunde(kunde1);
-            brugerRepo.OpretKunde(kunde2);
+           
 
 
 
             //Dette er de besog, der er oprettet
-            Besøg besøg1 = new Besøg(new DateTime(2025, 4, 15), kunde1, hund3);
+            Besøg besøg1 = new Besøg(new DateTime(2025, 4, 15), kunde1, );
             Besøg besøg2 = new Besøg(new DateTime(2025, 3, 17), kunde2, kat1);
             #endregion
             besøgRepo.AddBesøg(besøg1);
             besøgRepo.AddBesøg(besøg2);
 
-            dyrRepo.TilføjDyr(hund1);
-            dyrRepo.TilføjDyr(hund2);
-            dyrRepo.TilføjDyr(hund3);
 
-            brugerRepo.OpretMedarbejder(medarbejder1);
-            brugerRepo.OpretMedarbejder(medarbejder2);
-            brugerRepo.OpretMedarbejder(medarbejder3);
-            dyrRepo.TilføjDyr(kat1);
-            dyrRepo.TilføjDyr(kat2);
-            dyrRepo.TilføjDyr(kat3);
-            //Console.WriteLine(kat1.PrintAltInfo());
-            //Console.WriteLine(kat1.Lavlyd());
+            //////SLET MÅSKE
+            //dyrRepo.TilføjDyr(hund1);
+            //dyrRepo.TilføjDyr(hund2);
+            //dyrRepo.TilføjDyr(hund3);
+
+            //brugerRepo.OpretMedarbejder(medarbejder1);
+            //brugerRepo.OpretMedarbejder(medarbejder2);
+            //brugerRepo.OpretMedarbejder(medarbejder3);
+            //dyrRepo.TilføjDyr(kat1);
+            //dyrRepo.TilføjDyr(kat2);
+            //dyrRepo.TilføjDyr(kat3);
+            ////Console.WriteLine(kat1.PrintAltInfo());
+            ////Console.WriteLine(kat1.Lavlyd());
 
 
 

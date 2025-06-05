@@ -74,7 +74,7 @@ namespace RoskildeDyreinternat
         }
         //den er lavet til at hunde og katte kan lave lyd (den bliver overrindet i de to klasser)
 
-        public virtual string Lavlyd()
+        public virtual string LavLyd()
         {
         return "Dyret siger: ";
         }
@@ -84,9 +84,13 @@ namespace RoskildeDyreinternat
         {
             return $"Navn: {Navn}, Race: {Race}, Chipnummer: {Chipnummer}, Køn: {Køn}, Alder: {Alder}, Helbred: {Helbredstilstand}, Adopteret: {ErAdopteret}";
         }
-      
+
+        
+        public abstract int GetChipnummer();
     }
+
 }
+
 
 
 

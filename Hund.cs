@@ -35,19 +35,23 @@ namespace RoskildeDyreinternat
             set { erTrænet = value; }
         }
         //den printer alt info om hund
-        public override string PrintAltInfo() // <- krævet af abstract base class
+        public override string ToString() 
         {
             return $"Navn: {Navn}\nRace: {Race}\nChipnummer: {Chipnummer}\nKøn: {Køn}\nAlder{Alder}\nHelbredstilstand {Helbredstilstand}\nErAdopteret {ErAdopteret}\nkanMedAndreHunde{KanMedAndreHunde}\nErTrænet{ErTrænet}";
         }
 
         //den laver lyd
-        public override string Lavlyd()
+        public override string LavLyd()
         {
             return "Hunden siger: Vuf!";
         }
-
+        //skal bruges til AddHund (sikkerhed for at den samme hund ikke bliver tilføjet flere gange) 
+        public override int GetChipnummer()
+        {
+            return Chipnummer;
+        }
     }
 }
 
-    }
-}
+    
+
