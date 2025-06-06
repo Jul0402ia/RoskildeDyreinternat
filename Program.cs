@@ -1,276 +1,100 @@
-﻿namespace RoskildeDyreinternat
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace RoskildeDyreinternat
 {
 
     class Program
     {
         static void Main(string[] args)
         {
-            #region Alle Objekter 
+            #region Alle Objekter
             // Opretter en ny instans af KundeRepo
-            var besøgRepo = new BesøgRepo();
+            BesøgRepo besøgRepo = new BesøgRepo();
             var brugerRepo = new BrugerRepo(besøgRepo);
-            brugerRepo.OpretKunde(kunde1);
-            brugerRepo.OpretKunde(kunde2);
-
 
             DyrRepo repo = new DyrRepo();
 
-                repo.dyrDictionary.Add(1, new Hund(true, true, "Stella", "race", 1, "hun", 3, "sund", false));
-                repo.dyrDictionary.Add(2, new Hund(true, false, "Bob", "ukendt", 3, "han", 2, "sund", false));
-                repo.dyrDictionary.Add(3, new Hund(false, false, "Dennis", "ukendt", 2, "han", 6, "mangler et ben", false));
+            //Hunde
+            repo.dyrDictionary.Add(1, new Hund(true, true, "Stella", "Race1", 1, "hun", 3, "sund", false));
+            repo.dyrDictionary.Add(2, new Hund(true, false, "Bob", "Race2", 2, "han", 2, "sund", false));
+            repo.dyrDictionary.Add(3, new Hund(false, false, "Dennis", "Race3", 3, "han", 6, "mangler et ben", false));
+            repo.dyrDictionary.Add(4, new Hund(true, true, "Bella", "Race4", 4, "hun", 4, "sund", false));
+            repo.dyrDictionary.Add(5, new Hund(false, true, "Max", "Race5", 5, "han", 1, "let syg", false));
+            repo.dyrDictionary.Add(6, new Hund(true, false, "Charlie", "Race6", 6, "han", 5, "sund", false));
+            repo.dyrDictionary.Add(7, new Hund(false, true, "Molly", "Race7", 7, "hun", 7, "sund", false));
+            repo.dyrDictionary.Add(8, new Hund(true, true, "Rocky", "Race8", 8, "han", 4, "sund", false));
+            repo.dyrDictionary.Add(9, new Hund(false, false, "Daisy", "Race9", 9, "hun", 3, "sund", false));
+            repo.dyrDictionary.Add(10, new Hund(true, false, "Toby", "Race10", 10, "han", 2, "sund", false));
 
-                repo.dyrDictionary.Add(99, new Kat(true, true, "Denas", "Siamese", 99, "han", 5, "Sund", false));
-                repo.dyrDictionary.Add(98, new Kat(true, false, "Hansen", "Norsk Skovkat", 98, "hun", 2, "Mangler et øje", false));
-                repo.dyrDictionary.Add(97, new Kat(false, true, "Emil", "Maine Coon", 97, "han", 12, "Har sukkersyge", false));
+            //Katte
+            repo.dyrDictionary.Add(101, new Kat(true, true, "Denas", "Siamese", 101, "han", 5, "Sund", false));
+            repo.dyrDictionary.Add(102, new Kat(true, false, "Hansen", "Norsk Skovkat", 102, "hun", 2, "Mangler et øje", false));
+            repo.dyrDictionary.Add(103, new Kat(false, true, "Emil", "Maine Coon", 103, "han", 12, "Har sukkersyge", false));
+            repo.dyrDictionary.Add(104, new Kat(true, true, "Luna", "Bengal", 104, "hun", 3, "Sund", false));
+            repo.dyrDictionary.Add(105, new Kat(false, false, "Oscar", "Ragdoll", 105, "han", 7, "Let forkølet", false));
+            repo.dyrDictionary.Add(106, new Kat(true, false, "Mia", "Persian", 106, "hun", 4, "Sund", false));
+            repo.dyrDictionary.Add(107, new Kat(false, true, "Simba", "Savannah", 107, "han", 6, "Sund", false));
+            repo.dyrDictionary.Add(108, new Kat(true, true, "Nala", "Burmese", 108, "hun", 5, "Sund", false));
+            repo.dyrDictionary.Add(109, new Kat(false, false, "Felix", "British Shorthair", 109, "han", 8, "Sund", false));
+            repo.dyrDictionary.Add(110, new Kat(true, false, "Zoe", "Ragdoll", 110, "hun", 3, "Sund", false));
 
-                foreach (var entry in repo.dyrDictionary)
-                {
-                    Console.WriteLine($"ID: {entry.Key}, Navn: {entry.Value.Navn}");
-                    Console.WriteLine(entry.Value.LavLyd());
-                }
+
+            foreach (var entry in repo.dyrDictionary)
+            {
+                Console.WriteLine($"ID: {entry.Key}, Navn: {entry.Value.Navn}");
+                Console.WriteLine(entry.Value.LavLyd());
             }
 
-            //Dette er de kunder, der er oprettet
+
+            //Oprettet kunder
             Kunde kunde1 = new Kunde(99, "Ida", "IdaEmail", "1234567", "Højvej 1", "Kunde", 23, "Mand");
             Kunde kunde2 = new Kunde(98, "Lone", "LoneEmail", "7654321", "Blomstervej", "Kunde", 67, "Kvinde");
             Kunde kunde3 = new Kunde(97, "Læse", "Læse@mail.com", "12345678", "Durumvej 20", "Kunde", 34, "Mand");
             Kunde kunde4 = new Kunde(96, "Luke", "luke@gmsil.com", "2323232", "Sezzamvej35 2.tv", "Kunde", 36, "Mand");
+            Kunde kunde5 = new Kunde(95, "Anna", "anna@mail.com", "99887766", "Roservej 12", "Kunde", 28, "Kvinde");
+            Kunde kunde6 = new Kunde(94, "Mikkel", "mikkel@mail.com", "55443322", "Lærkevej 8", "Kunde", 41, "Mand");
+            Kunde kunde7 = new Kunde(93, "Sofie", "sofie@mail.com", "11223344", "Bøgvej 5", "Kunde", 35, "Kvinde");
+            Kunde kunde8 = new Kunde(92, "Jonas", "jonas@mail.com", "66778899", "Egevej 15", "Kunde", 22, "Mand");
+            Kunde kunde9 = new Kunde(91, "Maria", "maria@mail.com", "22334455", "Pilvej 9", "Kunde", 30, "Kvinde");
+            Kunde kunde10 = new Kunde(90, "Peter", "peter@mail.com", "77665544", "Fyrvej 3", "Kunde", 45, "Mand");
 
 
-            //Dette er de medarbejder, der er oprettet
+            //Oprettet medarbejder
             Medarbejder medarbejder1 = new Medarbejder(1, "Emil", "emil@hund.dk", "+45 232323", "Denvej 7", "Frivillig", "Frivillig", 0);
             Medarbejder medarbejder2 = new Medarbejder(2, "Emma", "emma@kat.dk", "+45 34 34 34 34", "Gladvej 2", "Medarbejder", "Dyrpasser", 37);
             Medarbejder medarbejder3 = new Medarbejder(3, "Erik", "erik@doctor.dk", "+45 11 11 22 22", "Flotvej 63", "Medarbejder", "Dyrlæge", 35);
+            Medarbejder medarbejder4 = new Medarbejder(4, "Lise", "lise@hund.dk", "+45 44 55 66 77", "Bakkevej 10", "Frivillig", "Frivillig", 0);
+            Medarbejder medarbejder5 = new Medarbejder(5, "Mads", "mads@kat.dk", "+45 88 77 66 55", "Søndergade 5", "Medarbejder", "Dyrpasser", 40);
+            Medarbejder medarbejder6 = new Medarbejder(6, "Sara", "sash@dyrlæge.dk", "+45 22 33 44 55", "Nordvej 3", "Medarbejder", "Dyrlæge", 38);
+            Medarbejder medarbejder7 = new Medarbejder(7, "Peter", "peter@hund.dk", "+45 99 88 77 66", "Østergade 12", "Frivillig", "Frivillig", 0);
+            Medarbejder medarbejder8 = new Medarbejder(8, "Anna", "anna@kat.dk", "+45 55 66 77 88", "Vejgade 9", "Frivillig", "Frivillig", 0);
+            Medarbejder medarbejder9 = new Medarbejder(9, "Martin", "martin@hund.dk", "+45 66 77 88 99", "Lundvej 4", "Medarbejder", "Dyrpasser", 42);
+            Medarbejder medarbejder10 = new Medarbejder(10, "Camilla", "camilla@dyrlæge.dk", "+45 77 88 99 00", "Skovvej 11", "Medarbejder", "Dyrlæge", 39);
+            Medarbejder medarbejder11 = new Medarbejder(11, "Jesper", "jesper@hund.dk", "+45 88 99 00 11", "Havevej 6", "Frivillig", "Frivillig", 0);
+            Medarbejder medarbejder12 = new Medarbejder(12, "Sofie", "sofie@kat.dk", "+45 99 00 11 22", "Parkvej 7", "Medarbejder", "Dyrpasser", 35);
+            Medarbejder medarbejder13 = new Medarbejder(13, "Jacob", "jacob@dyrlæge.dk", "+45 00 11 22 33", "Skovvej 12", "Medarbejder", "Dyrlæge", 41);
+            Medarbejder medarbejder14 = new Medarbejder(14, "Ida", "ida@hund.dk", "+45 11 22 33 44", "Markvej 14", "Frivillig", "Frivillig", 0);
+            Medarbejder medarbejder15 = new Medarbejder(15, "Thomas", "thomas@kat.dk", "+45 22 33 44 55", "Lindevej 15", "Medarbejder", "Dyrpasser", 38);
 
 
-           
 
 
+            // Eksempel på at booke besøg for kunde1 med forskellige dyr på forskellige datoer:
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(9), kunde1, repo.dyrDictionary[1]);  // Hund Stella
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(2).Date.AddHours(10), kunde1, repo.dyrDictionary[101]); // Kat Denas
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(3).Date.AddHours(11), kunde1, repo.dyrDictionary[2]);  // Hund Bob
 
-            //Dette er de besog, der er oprettet
-            Besøg besøg1 = new Besøg(new DateTime(2025, 4, 15), kunde1, );
-            Besøg besøg2 = new Besøg(new DateTime(2025, 3, 17), kunde2, kat1);
+            // Kunde2 har kun 1 besøg:
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(14), kunde2, repo.dyrDictionary[3]);
+
+            // Kunde3 har ingen besøg (ingen kald til BookBesøg)
+
+            // Udskriv alle bookede besøg:
+            Console.WriteLine(besøgRepo.ToString());
             #endregion
-            besøgRepo.AddBesøg(besøg1);
-            besøgRepo.AddBesøg(besøg2);
-
-
-            //////SLET MÅSKE
-            //dyrRepo.TilføjDyr(hund1);
-            //dyrRepo.TilføjDyr(hund2);
-            //dyrRepo.TilføjDyr(hund3);
-
-            //brugerRepo.OpretMedarbejder(medarbejder1);
-            //brugerRepo.OpretMedarbejder(medarbejder2);
-            //brugerRepo.OpretMedarbejder(medarbejder3);
-            //dyrRepo.TilføjDyr(kat1);
-            //dyrRepo.TilføjDyr(kat2);
-            //dyrRepo.TilføjDyr(kat3);
-            ////Console.WriteLine(kat1.PrintAltInfo());
-            ////Console.WriteLine(kat1.Lavlyd());
-
-
-
-            brugerRepo.VisBrugerInfo(1);
-
-            brugerRepo.VisBrugerInfo(2);
-
-            brugerRepo.VisBrugerInfo(3);
-
-            //Skaber Mellemrum
-            Console.WriteLine();
-            //Oprettelse af brugere (Både kunder og medarbejdere), både som objekt i egen klasse og i brugerRepo.
-
-
-
-
-            Console.WriteLine("Søger dyr frem:");
-
-            dyrRepo.VisDyrInfo(123);
-            dyrRepo.VisDyrInfo(456);
-            dyrRepo.VisDyrInfo(1);
-            dyrRepo.VisDyrInfo(2);
-            dyrRepo.VisDyrInfo(6);
-
-            dyrRepo.GetDyrByKøn("han");
-
-            dyrRepo.GetDyrByKøn("hun");
-
-
-
-
-            //Skaber Mellemrum
-            Console.WriteLine();
-
-            //Console.WriteLine(hund3.PrintAltInfo());
-            //Console.WriteLine(hund3.Lavlyd());
-
-
-
-
-            //Dette bruges til at fange og håndtere fejl -fx forsger man her, at tilføje en kunde med et ID som allreede findes
-            try
-            {
-                brugerRepo.OpretKunde(kunde1);
-                brugerRepo.OpretKunde(kunde2);
-
-                besøgRepo.AddBesøg(besøg1);
-
-
-
-                //Lav det som en kommentar og prøv at kør den. Fixed, kør!  
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Der opstod en fejl, dette ID eksisterer allerede til en kunde/medarbejder:");
-            }
-
-            #region Switch menu
-            {
-
-                Console.WriteLine("Velkommen til DyreAdoptionsSystemet!");
-                Console.WriteLine("Vælg din rolle:");
-                Console.WriteLine("1. Gæst");
-                Console.WriteLine("2. Kunde");
-                Console.WriteLine("3. Medarbejder");
-
-                string rolleValg = Console.ReadLine();
-
-                switch (rolleValg)
-                {
-                    case "1": // Gæst
-                        Console.WriteLine("Opret ny konto");
-                        Console.Write("Indtast navn: ");
-                        string navn = Console.ReadLine();
-                        Console.Write("Indtast mail: ");
-                        string mail = Console.ReadLine();
-                        Console.Write("Indtast adresse: ");
-                        string adresse = Console.ReadLine();
-                        Console.Write("Indtast telefonnummer: ");
-                        string telefon = Console.ReadLine();
-
-                        Console.WriteLine($"Tak {navn}, din konto er oprettet!");
-                        break;
-
-                    case "2": // Kunde
-                        Console.WriteLine("Hvad vil du gerne gøre?");
-                        Console.WriteLine("1. Se alle dyr");
-                        Console.WriteLine("2. Filtrér dyr");
-                        Console.WriteLine("3. Book besøg");
-
-                        string kundeValg = Console.ReadLine();
-                        switch (kundeValg)
-                        {
-                            case "1":
-                                Console.WriteLine("Her er alle dyr til adoption...");
-                                // Her vises en liste over dyr
-                                break;
-                            case "2":
-                                Console.WriteLine("vælg dyr der skal vises");
-                                Console.WriteLine("1. Hund");
-                                Console.WriteLine("2. Kat");
-                                Console.WriteLine("3. Han");
-                                Console.WriteLine("4. Hun");
-
-                                // Det der skrives ind bliver nedenfor sikret er et tal, laves med int.Parse - det sikre at der ikke kan skrives bogstaver ind
-                                int filtrering = int.Parse(Console.ReadLine());
-
-                                //Her parser (konverterer) int til en string, fordi at readline kun tager tekst som input, det er for at sikre sig, at en tekst string kan tage int 
-                                Console.WriteLine($"Du har valgt {filtrering.ToString()}.");
-
-                                dyrRepo.ValgteDyr(filtrering);
-
-                                // Tilføjelse af filtreringslogik
-                                break;
-                            case "3":
-                                Console.Write("Vælg dato (dd-mm-åååå): ");
-                                string dato = Console.ReadLine();
-                                Console.Write("Vælg tidspunkt (fx 14:00): ");
-                                string tid = Console.ReadLine();
-                                Console.Write("Vælg hvilket dyr du vil besøge: ");
-                                string dyrNavn = Console.ReadLine();
-
-                                Console.WriteLine($"Du har booket et besøg med {dyrNavn} den {dato} kl. {tid}");
-                                break;
-                            default:
-                                Console.WriteLine("Ugyldigt valg.");
-                                break;
-                        }
-                        break;
-
-                    case "3": // Medarbejder
-                        Console.WriteLine("Medarbejdermenu:");
-                        Console.WriteLine("1. Opret nyt dyr");
-                        Console.WriteLine("2. Rediger oplysninger om dyr");
-                        Console.WriteLine("3. Se kundeoplysninger");
-                        Console.WriteLine("4. Vis alle besøg");
-
-                        string medarbejderValg = Console.ReadLine();
-                        switch (medarbejderValg)
-                        {
-                            case "1":
-                                Console.Write("Indtast navn på dyret: ");
-                                string dyrenavn = Console.ReadLine();
-                                Console.Write("Indtast race: ");
-                                string race = Console.ReadLine();
-                                Console.Write("Indtast chipnummer: ");
-                                string chip = Console.ReadLine();
-
-                                Console.WriteLine($"{dyrenavn} er nu oprettet som 'ledig'.");
-                                break;
-
-                            case "2":
-                                Console.Write("Indtast navn på dyret du vil redigere: ");
-                                string redigerNavn = Console.ReadLine();
-                                Console.Write("Opdateret alder: ");
-                                string alder = Console.ReadLine();
-                                Console.Write("Opdateret helbredstilstand: ");
-                                string helbred = Console.ReadLine();
-
-                                Console.WriteLine($"{redigerNavn}'s oplysninger er opdateret.");
-                                break;
-
-                            case "3":
-                                Console.Write("Indtast kundens ID: ");
-                                string kundeIDInput = Console.ReadLine();
-
-                                if (int.TryParse(kundeIDInput, out int kundeID))
-                                {
-                                    Console.WriteLine($"Viser oplysninger for ID {kundeID}...");
-                                    brugerRepo.VisBrugerInfo(kundeID);
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Ugyldigt ID – det skal være et tal.");
-                                }
-                                break;
-                            // Her kunne vises kontaktoplysninger og bookinger
-                            case "4":
-                                Console.WriteLine("Viser alle besøg:");
-                                Console.WriteLine(besøgRepo.ToString());
-                                break;
-
-
-                            default:
-                                Console.WriteLine("Ugyldigt valg.");
-                                break;
-                        }
-                        break;
-
-                    default:
-                        Console.WriteLine("Ugyldig rolle valgt.");
-                        break;
-                }
-
-            }
-            foreach (Dyr dyr in dyrRepo.GetDyrByKøn("hun"))
-            {
-                Console.WriteLine(dyr.PrintAltInfo());
-            }
-
         }
-
-        #endregion
     }
 }
-

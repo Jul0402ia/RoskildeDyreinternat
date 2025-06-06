@@ -6,50 +6,51 @@ using System.Threading.Tasks;
 
 namespace RoskildeDyreinternat
 {
-
     public class BrugerRepo : IBrugerRepo
     {
-        //Dictionary bruges til at slå noget op hurtigt ved hjælp af en key (Kunde ID) (Medarbejder ID)
-        Dictionary<int, Kunde> _kundeListe = new Dictionary<int, Kunde>();
-        Dictionary<int, Medarbejder> _medarbejderListe = new Dictionary<int, Medarbejder>();
+        // Dictionary gør det hurtigt at slå brugere op via deres ID
+        public Dictionary<int, Kunde> kundeListe = new Dictionary<int, Kunde>();
+        public Dictionary<int, Medarbejder> medarbejderListe = new Dictionary<int, Medarbejder>();
 
-        // Private fields med lille begyndelsesbogstav
-        private BesøgRepo _besøgRepo;
+        // Felt til at holde referencen til BesøgRepo (for at kunne hente bookinger til kunder)
+        private BesøgRepo besøgRepo;
 
-        // Konstruktør med parametre 
+        // Konstruktør: (modtagelse af et BesøgRepo-objekt og gemmer det i feltet ovenfor)
         public BrugerRepo(BesøgRepo besøgRepo)
         {
-            _besøgRepo = besøgRepo;
+            this.besøgRepo = besøgRepo; // uden "this." gemmes det ikke korrekt
         }
 
-        // Opretter en ny kunde og tilføjer den til listen, hvis ID'et ikke allerede findes
+        // Oprettelse af en ny kunde + tilføjelse til kunde-listen, hvis ID'et ikke allerede findes
         public void OpretKunde(Kunde kunde)
         {
-            if (!_kundeListe.ContainsKey(kunde.Id))
+            if (!kundeListe.ContainsKey(kunde.Id))
             {
-                _kundeListe.Add(kunde.Id, kunde);
+                kundeListe.Add(kunde.Id, kunde);
             }
             else
             {
                 throw new ArgumentException($"Bruger med ID {kunde.Id} eksisterer allerede.");
             }
         }
-        // Opretter en ny medarbejder og tilføjer den til listen, hvis ID'et ikke allerede findes
+
+        // Opretteelse af en ny medarbejder + tilføjelse af den til medarbejder-listen, hvis ID'et ikke allerede findes
         public void OpretMedarbejder(Medarbejder medarbejder)
         {
-            if (!_medarbejderListe.ContainsKey(medarbejder.Id))
+            if (!medarbejderListe.ContainsKey(medarbejder.Id))
             {
-                _medarbejderListe.Add(medarbejder.Id, medarbejder);
+                medarbejderListe.Add(medarbejder.Id, medarbejder);
             }
             else
             {
                 throw new ArgumentException($"Medarbejder med ID {medarbejder.Id} eksisterer allerede.");
             }
         }
-        // Opdaterer info om kunden i en kundeliste (dictonary) baseret på kundens ID 
+
+        // Opdaterer info om en kunde hvis ID'et findes
         public void OpdaterKundeInfo(int id, string navn, string email, string telefon, string adresse)
         {
-            if (_kundeListe.TryGetValue(id, out Kunde kunde))
+            if (kundeListe.TryGetValue(id, out Kunde kunde))
             {
                 kunde.Navn = navn;
                 kunde.Email = email;
@@ -58,80 +59,108 @@ namespace RoskildeDyreinternat
             }
             else
             {
-                throw new KeyNotFoundException($"Bruger med ID {id} blev ikke fundet.");
+                throw new KeyNotFoundException($"Kunde med ID {id} blev ikke fundet.");
             }
         }
-        //Sletter en kunde fra en kundeliste (diconary) baseret på kundens ID
-        public void SletKunde(int id)
+        // FIX DET !!!!!
+        // Slet en kunde hvis ID'et findes (kun medarbejder (frivillige passer til medarbejder klassen, dog er de sat til at arbejde 0 timer))
+        public void SletKunde(int kundeId, int medarbejderId, bool sletBesøg)
         {
-            if (_kundeListe.TryGetValue(id, out Kunde kunde))
+            if (medarbejderListe.TryGetValue(medarbejderId, out Medarbejder medarbejder) && medarbejder.Antalarbejdstimer > 0)
             {
-                _kundeListe.Remove(id);
-            }
-            else
-            {
-                throw new KeyNotFoundException($"Bruger med ID {id} blev ikke fundet.");
-            }
-        }
-        //den viser hvilken rolle en bruger har (om det er en kunde eller en medarbejder) ud fra brugerens ID
-        public void VisBrugerRolle(int id)
-        {
-            if (_kundeListe.TryGetValue(id, out Kunde kunde))
-            {
-                Console.WriteLine($"Du har søgt efter ID: {id}:");
-                Console.WriteLine($"Bruger ID: {kunde.Id}, Rolle: {kunde.Rolle}");
-            }
-            else
-            {
-                if (_medarbejderListe.TryGetValue(id, out Medarbejder medarbejder))
+                if (kundeListe.TryGetValue(kundeId, out Kunde kunde))
                 {
-                    Console.WriteLine($"Du har søgt efter ID: {id}:");
-                    Console.WriteLine($"Bruger ID: {medarbejder.Id}, Rolle: {medarbejder.Rolle}");
-                }
-                else
-                {
-                    throw new KeyNotFoundException($"Bruger med ID {id} blev ikke fundet.");
-                }
-            }
-        }
-        //den tjekker om ID findes i kundeliste (dictonary), hvis den ikke findes der tjekker den i medarbejderlisten (dictonary), hvis ingen passer til ID'et informerer den om ingen bruger er blevet fundet 
-        public void VisBrugerInfo(int id)
-        {
-            if (_kundeListe.TryGetValue(id, out Kunde kunde))
-            {
-                Console.WriteLine($"Du har søgt efter ID: {id}:");
-                Console.WriteLine();
-                Console.WriteLine($"Bruger ID: {kunde.Id}\n Navn: {kunde.Navn}\n Email: {kunde.Email}\n Tlf: {kunde.Telefon}\n Adresse: {kunde.Adresse}\n Alder: {kunde.Alder}\n Køn: {kunde.Køn}");
-                Console.WriteLine();
-                var kundeBesøg = _besøgRepo.HentBesøgForKunde(kunde);
-                Console.WriteLine("Bookinger:");
-                if (kundeBesøg.Count == 0)
-                {
-                    Console.WriteLine("Ingen bookinger fundet.");
-                }
-                else
-                {
-                    foreach (var besog in kundeBesøg)
+                    if (sletBesøg)
                     {
-                        Console.WriteLine($"- Dato: {besog.Dato}, Dyr: {besog.PrintBesogsInfo()}");
+                        besøgRepo.SletBesøg(kunde.Id);
+                        Console.WriteLine($"Alle besøg for kunden {kunde.Navn} er slettet.");
+                    }
+                    else
+                    {
+                        var kundeBesøg = besøgRepo.HentBesøgForKunde(kunde);
+                        if (kundeBesøg.Count > 0)
+                        {
+                            Console.WriteLine("Kunden har stadig besøg registreret. Slet besøg først eller vælg at slette dem samtidig.");
+                            return;
+                        }
+                    }
+
+                    bool succes = kundeListe.Remove(kundeId);
+                    if (succes)
+                    {
+                        Console.WriteLine($"Kunden {kunde.Navn} (ID: {kunde.Id}) er slettet.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Kunne ikke slette kunden.");
                     }
                 }
-
+                else
+                {
+                    Console.WriteLine($"Kunde med ID {kundeId} blev ikke fundet.");
+                }
             }
-            else if (_medarbejderListe.TryGetValue(id, out Medarbejder medarbejder))
+            else
             {
-                Console.WriteLine($"Du har søgt efter ID: {id}:");
-                Console.WriteLine();
-                Console.WriteLine($"Bruger ID: {medarbejder.Id}\n Navn: {medarbejder.Navn}\n Email: {medarbejder.Email}\n Tlf: {medarbejder.Telefon}\n"
-                    + $" Adresse: {medarbejder.Adresse}\n Rolle: {medarbejder.Rolle}\n Stilling: {medarbejder.Stilling}\n Arbejdstimer: {medarbejder.Antalarbejdstimer}");
-                Console.WriteLine();
+                Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 arbejdstimer kan slette kunder.");
+            }
+        }
+
+        // Viser hvilken rolle en bruger har ud fra deres ID (godt hvis man skal tjekke om personen er ansat eller frivillig)
+        public void VisBrugerRolle(int id)
+        {
+            if (kundeListe.TryGetValue(id, out Kunde kunde))
+            {
+                Console.WriteLine($"Bruger ID: {kunde.Id}, Rolle: {kunde.Rolle}");
+            }
+            else if (medarbejderListe.TryGetValue(id, out Medarbejder medarbejder))
+            {
+                Console.WriteLine($"Bruger ID: {medarbejder.Id}, Rolle: {medarbejder.Rolle}");
             }
             else
             {
                 throw new KeyNotFoundException($"Bruger med ID {id} blev ikke fundet.");
+            }
+        }
+
+        // Viser detaljer om både kunder og medarbejdere ud fra ID (funktionen kun tilgængelig for de ansætte på over 0 timer (ikke frivillige))
+        public void VisBrugerInfo(int brugerId, int medarbejderId)
+        {
+            if (medarbejderListe.TryGetValue(medarbejderId, out Medarbejder medarbejder) && medarbejder.Antalarbejdstimer > 0)
+            {
+                if (kundeListe.TryGetValue(brugerId, out Kunde kunde))
+                {
+                    Console.WriteLine($"Bruger ID: {kunde.Id}\nNavn: {kunde.Navn}\nEmail: {kunde.Email}\nTlf: {kunde.Telefon}\nAdresse: {kunde.Adresse}\nAlder: {kunde.Alder}\nKøn: {kunde.Køn}");
+                    Console.WriteLine();
+
+                    var kundeBesøg = besøgRepo.HentBesøgForKunde(kunde);
+                    Console.WriteLine("Bookinger:");
+                    if (kundeBesøg.Count == 0)
+                    {
+                        Console.WriteLine("Ingen bookinger fundet.");
+                    }
+                    else
+                    {
+                        foreach (var besog in kundeBesøg)
+                        {
+                            Console.WriteLine($"- Dato: {besog.Dato}, Dyr: {besog.PrintBesogsInfo()}");
+                        }
+                    }
+                }
+                else if (medarbejderListe.TryGetValue(brugerId, out Medarbejder med))
+                {
+                    Console.WriteLine($"Bruger ID: {med.Id}\nNavn: {med.Navn}\nEmail: {med.Email}\nTlf: {med.Telefon}\nAdresse: {med.Adresse}\nRolle: {med.Rolle}\nStilling: {med.Stilling}\nArbejdstimer: {med.Antalarbejdstimer}");
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Bruger med ID {brugerId} blev ikke fundet.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 timer må se brugerinfo.");
             }
         }
     }
 }
-
 

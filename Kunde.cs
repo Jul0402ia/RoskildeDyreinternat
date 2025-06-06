@@ -36,7 +36,7 @@ namespace RoskildeDyreinternat
         }
 
         //den printer alt info om  kunde
-        public override string PrintAltInfo()// <- krævet af abstract base class
+        public override string PrintAltInfo()
         {
             return $" ID: {Id}\nNavn: {Navn}\nEmail: {Email}\nAdresse: {Adresse}\nTlf: {Telefon}\nRolle: {Rolle}\nAlder: {Alder}\nKøn: {Køn}";
 

@@ -8,11 +8,13 @@ namespace RoskildeDyreinternat
 {
     public interface IBrugerRepo
     {
-        void OpretKunde(Kunde kunde);
-        void OpretMedarbejder(Medarbejder medarbejder);
-        void OpdaterKundeInfo(int id, string navn, string email, string telefon, string adresse);
-        void SletKunde(int id);
-        void VisBrugerRolle(int id);
-        void VisBrugerInfo(int id);
+        public void OpretKunde(Kunde kunde);
+        public void OpretMedarbejder(Medarbejder medarbejder);
+        public void OpdaterKundeInfo(int id, string navn, string email, string telefon, string adresse);
+        public void SletKunde(int kundeId, int medarbejderId, bool sletBesøg);
+        public void VisBrugerRolle(int id);
+        public void VisBrugerInfo(int brugerId, int medarbejderId);
+
+
     }
 }
