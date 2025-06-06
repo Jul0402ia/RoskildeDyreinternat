@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RoskildeDyreinternat
+namespace RoskildeDyreinternat.Repositories
 {
     public class BrugerRepo : IBrugerRepo
     {
@@ -62,7 +62,6 @@ namespace RoskildeDyreinternat
                 throw new KeyNotFoundException($"Kunde med ID {id} blev ikke fundet.");
             }
         }
-        // FIX DET !!!!!
         // Slet en kunde hvis ID'et findes (kun medarbejder (frivillige passer til medarbejder klassen, dog er de sat til at arbejde 0 timer))
         public void SletKunde(int kundeId, int medarbejderId, bool sletBesøg)
         {
