@@ -132,6 +132,22 @@ namespace RoskildeDyreinternat.Repositories
             }
         }
 
+        #region Søgning på katteliste og hunde liste efter race 
+        public List<Kat> SøgKattePåRace(string race)
+        {
+            List<Kat> fundneKatte = new List<Kat>();
+
+            foreach (var kat in KatteListe)
+            {
+                if (kat.Race.ToLower().Contains(race.ToLower()))
+                {
+                    fundneKatte.Add(kat);
+                }
+            }
+
+            return fundneKatte;
+        }
+
         // Vis kun hunde 
         public void VisHunde()
         {
@@ -141,15 +157,156 @@ namespace RoskildeDyreinternat.Repositories
             }
         }
 
-        #region Filtrering ud fra dictonary på hunde og katte
-        public List<Hund> FindAlleHunde()
+        public List<Hund> SøgHundePåRace(string race)
         {
-            return dyrDictionary.Values.OfType<Hund>().ToList();
+            List<Hund> fudneHund = new List<Hund>();
+            foreach (var hund in HundeListe)
+            {
+                if (hund.Race.ToLower().Contains(race.ToLower()))
+                {
+                    fudneHund.Add(hund);
+                }
+            }
+            return fudneHund;
+        }
+        #endregion
+
+        #region Filtrering på dyrets alder
+        public List<Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
+        {
+            List<Dyr> resultat = new List<Dyr>();
+
+            foreach (Dyr dyr in dyrDictionary.Values)
+            {
+                // Tjek om det er Kat eller Hund, og om alder ligger mellem min og max
+                if ((dyr is Kat && dyr.Alder >= minAlder && dyr.Alder <= maxAlder) ||
+                    (dyr is Hund && dyr.Alder >= minAlder && dyr.Alder <= maxAlder))
+                {
+                    resultat.Add(dyr);
+                }
+            }
+
+            return resultat;
+        }
+        #endregion
+
+        #region Filtrering på hunde der er og ikke er trænet, og hunde der kan og ikke kan med andre hunde 
+        public List<Hund> FiltreringPåHundeDerErTrænet(bool erTrænet)
+        {
+            List<Hund> filtreredeHunde = new List<Hund>();
+
+            foreach (var hund in HundeListe)
+            {
+                if (hund.ErTrænet == erTrænet)
+                {
+                    filtreredeHunde.Add(hund);
+                }
+            }
+
+            return filtreredeHunde;
         }
 
-        public List<Kat> FindAlleKatte()
+        public List<Hund> FiltreringPåHundeDerIkkeErTrænet(bool erTrænet)
         {
-            return dyrDictionary.Values.OfType<Kat>().ToList();
+            List<Hund> filtreredeHunde = new List<Hund>();
+
+            foreach (var hund in HundeListe)
+            {
+                if (hund.ErTrænet != erTrænet)
+                {
+                    filtreredeHunde.Add(hund);
+                }
+            }
+
+            return filtreredeHunde;
+        }
+
+        public List<Hund> FiltreringPåHundeDerKanMedAndreHunde(bool kanMedAndreHunde)
+        {
+            List<Hund> filtreredeHunde = new List<Hund>();
+
+            foreach (var hund in HundeListe)
+            {
+                if (hund.KanMedAndreHunde == kanMedAndreHunde)
+                {
+                    filtreredeHunde.Add(hund);
+                }
+            }
+
+            return filtreredeHunde;
+        }
+
+        public List<Hund> FiltreringPåHundeDerIkkeKanMedAndreHunde(bool kanMedAndreHunde)
+        {
+            List<Hund> filtreredeHunde = new List<Hund>();
+
+            foreach (var hund in HundeListe)
+            {
+                if (hund.KanMedAndreHunde != kanMedAndreHunde)
+                {
+                    filtreredeHunde.Add(hund);
+                }
+            }
+
+            return filtreredeHunde;
+        }
+        #endregion
+        #region Filtrering på katte der skal være indekatte, og katte der kan og ikke kan med andre katte 
+        public List<Kat> FiltreringPåKatteDerKanMedAndreKatte(bool kanMedAndreKatte)
+        {
+            List<Kat> filtreredeKatte = new List<Kat>();
+
+            foreach (var kat in KatteListe)
+            {
+                if (kat.KanMedAndreKatte == kanMedAndreKatte)
+                {
+                    filtreredeKatte.Add(kat);
+                }
+            }
+
+            return filtreredeKatte;
+        }
+        public List<Kat> FiltreringPåKatteDerIkkeKanMedAndreKatte(bool kanMedAndreKatte)
+        {
+            List<Kat> filtreredeKatte = new List<Kat>();
+
+            foreach (var kat in KatteListe)
+            {
+                if (kat.KanMedAndreKatte != kanMedAndreKatte)
+                {
+                    filtreredeKatte.Add(kat);
+                }
+            }
+
+            return filtreredeKatte;
+        }
+        public List<Kat> FiltreringPåKatteDerSkalVæreIndekat(bool SkalVæreIndekat)
+        {
+            List<Kat> filtreredeKatte = new List<Kat>();
+
+            foreach (var kat in KatteListe)
+            {
+                if (kat.SkalVæreIndekat == SkalVæreIndekat)
+                {
+                    filtreredeKatte.Add(kat);
+                }
+            }
+
+            return filtreredeKatte;
+        }
+        public List<Kat> FiltreringPåKatteDerIkkeSkalVæreIndekat(bool SkalVæreIndekat)
+        {
+            List<Kat> filtreredeKatte = new List<Kat>();
+
+            foreach (var kat in KatteListe)
+            {
+                if (kat.SkalVæreIndekat != SkalVæreIndekat)
+                {
+                    filtreredeKatte.Add(kat);
+                }
+            }
+
+            return filtreredeKatte;
         }
         #endregion
     }

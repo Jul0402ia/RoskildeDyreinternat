@@ -8,7 +8,7 @@ namespace RoskildeDyreinternat.Repositories
 {
     public class BesøgRepo
     {
-        private List<Besøg> _besøgListe = new List<Besøg>();
+        public List<Besøg> _besøgListe = new List<Besøg>();
         // har fået anb. at bruge private readonly, for at beskytte data, men har ikke lært om det endnu
         public IAdgangsKontrol _adgangsKontrol;
 
@@ -145,5 +145,41 @@ namespace RoskildeDyreinternat.Repositories
 
             return sb.ToString();
         }
+        public List<Besøg> SøgBesøgVedNummer(int søgeNummer)
+        {
+            List<Besøg> result = new List<Besøg>();
+
+            foreach (Besøg besøg in _besøgListe)
+            {
+                if (besøg.Besøgsnummer == søgeNummer)
+                {
+                    result.Add(besøg);
+                }
+            }
+
+            return result;
+        }
+ #region Filtrering på besøg ud fra dyrets chipnummer og selv vælgte datoer 
+        public List<Besøg> FiltrerBesøgPåChipnummerOgDato(int chipnummer, DateTime fraDato, DateTime tilDato)
+        {
+            List<Besøg> filtreredeBesøg = new List<Besøg>();
+
+            foreach (var besøg in _besøgListe)
+            {
+                // Tjek om chipnummer matcher OG datoen ligger inden for intervallet
+                if (besøg.Dyr.Chipnummer == chipnummer &&
+                    besøg.Dato.Date >= fraDato.Date &&
+                    besøg.Dato.Date <= tilDato.Date)
+                {
+                    filtreredeBesøg.Add(besøg);
+                }
+            }
+
+            // Sorter resultaterne efter dato (valgfrit, men ofte nyttigt)
+            filtreredeBesøg.Sort((b1, b2) => b1.Dato.CompareTo(b2.Dato));
+
+            return filtreredeBesøg;
+        }
+#endregion
     }
 }

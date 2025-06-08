@@ -18,7 +18,8 @@ namespace RoskildeDyreinternat.Repositories
         // Konstruktør: (modtagelse af et BesøgRepo-objekt og gemmer det i feltet ovenfor)
         public BrugerRepo(BesøgRepo besøgRepo)
         {
-            this.besøgRepo = besøgRepo; // uden "this." gemmes det ikke korrekt
+            // uden "this." gemmes det ikke korrekt
+            this.besøgRepo = besøgRepo; 
         }
         public bool HarAdgang(int medarbejderId)
         {
@@ -108,9 +109,9 @@ namespace RoskildeDyreinternat.Repositories
                 Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 arbejdstimer kan slette kunder.");
             }
         }
-
+#region Søgning: Vis bruger rolle
         // Viser hvilken rolle en bruger har ud fra deres ID (godt hvis man skal tjekke om personen er ansat eller frivillig)
-        public void VisBrugerRolle(int id)
+        public void SøgningVisBrugerRolle(int id)
         {
             if (kundeListe.TryGetValue(id, out Kunde kunde))
             {
@@ -125,9 +126,10 @@ namespace RoskildeDyreinternat.Repositories
                 throw new KeyNotFoundException($"Bruger med ID {id} blev ikke fundet.");
             }
         }
-
-        // Viser detaljer om både kunder og medarbejdere ud fra ID (funktionen kun tilgængelig for de ansætte på over 0 timer (ikke frivillige))
-        public void VisBrugerInfo(int brugerId, int medarbejderId)
+        #endregion
+#region Søgning bruger ude fra ID - kan kun bruges af medarbejder +0h
+        //  Viser info om brugeren ud fra ID (funktionen kun tilgængelig for de ansætte på over 0 timer (ikke frivillige))
+        public void SøgningVisBrugerInfo(int brugerId, int medarbejderId)
         {
             if (HarAdgang(medarbejderId))
             {
@@ -164,6 +166,39 @@ namespace RoskildeDyreinternat.Repositories
                 Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 timer må se brugerinfo.");
             }
         }
+        #endregion
+#region Filtrering medarbejder & Frivillige 
+        public List<Medarbejder> FiltreringMedarbejdereMedAdgang()
+        {
+            List<Medarbejder> resultat = new List<Medarbejder>();
+
+            foreach (var medarbejder in medarbejderListe.Values)
+            {
+                // Brug af interfacet/metoden
+                if (HarAdgang(medarbejder.Id))  
+                {
+                    resultat.Add(medarbejder);
+                }
+            }
+
+            return resultat;
+        }
+        public List<Medarbejder> FiltreringFrivillige()
+        {
+            List<Medarbejder> resultat = new List<Medarbejder>();
+
+            foreach (var medarbejder in medarbejderListe.Values)
+            {
+                // Tjekker om medarbejder ikke har adgang (timer = 0)
+                if (!HarAdgang(medarbejder.Id))  
+                {
+                    resultat.Add(medarbejder);
+                }
+            }
+
+            return resultat;
+        }
+        #endregion
     }
 }
 
