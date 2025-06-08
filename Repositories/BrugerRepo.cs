@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RoskildeDyreinternat.Repositories
 {
-    public class BrugerRepo : IBrugerRepo
+    public class BrugerRepo : IAdgangsKontrol
     {
         // Dictionary gør det hurtigt at slå brugere op via deres ID
         public Dictionary<int, Kunde> kundeListe = new Dictionary<int, Kunde>();
@@ -20,7 +20,11 @@ namespace RoskildeDyreinternat.Repositories
         {
             this.besøgRepo = besøgRepo; // uden "this." gemmes det ikke korrekt
         }
-
+        public bool HarAdgang(int medarbejderId)
+        {
+            return medarbejderListe.TryGetValue(medarbejderId, out Medarbejder medarbejder)
+                   && medarbejder.Antalarbejdstimer > 0;
+        }
         // Oprettelse af en ny kunde + tilføjelse til kunde-listen, hvis ID'et ikke allerede findes
         public void OpretKunde(Kunde kunde)
         {
@@ -65,7 +69,7 @@ namespace RoskildeDyreinternat.Repositories
         // Slet en kunde hvis ID'et findes (kun medarbejder (frivillige passer til medarbejder klassen, dog er de sat til at arbejde 0 timer))
         public void SletKunde(int kundeId, int medarbejderId, bool sletBesøg)
         {
-            if (medarbejderListe.TryGetValue(medarbejderId, out Medarbejder medarbejder) && medarbejder.Antalarbejdstimer > 0)
+            if (HarAdgang(medarbejderId))
             {
                 if (kundeListe.TryGetValue(kundeId, out Kunde kunde))
                 {
@@ -125,7 +129,7 @@ namespace RoskildeDyreinternat.Repositories
         // Viser detaljer om både kunder og medarbejdere ud fra ID (funktionen kun tilgængelig for de ansætte på over 0 timer (ikke frivillige))
         public void VisBrugerInfo(int brugerId, int medarbejderId)
         {
-            if (medarbejderListe.TryGetValue(medarbejderId, out Medarbejder medarbejder) && medarbejder.Antalarbejdstimer > 0)
+            if (HarAdgang(medarbejderId))
             {
                 if (kundeListe.TryGetValue(brugerId, out Kunde kunde))
                 {

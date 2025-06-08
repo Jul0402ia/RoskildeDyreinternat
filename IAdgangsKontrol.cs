@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RoskildeDyreinternat
 {
-    internal interface IAdgangsKontrol
+    public interface IAdgangsKontrol
     {
+        bool HarAdgang(int medarbejderId);
     }
 }
