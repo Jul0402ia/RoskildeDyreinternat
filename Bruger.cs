@@ -65,6 +65,11 @@ namespace RoskildeDyreinternat
         //den printer alt info om  brugertyper i de subklasser(kunde og medarbejder) hvor den bliver overridet 
         public abstract string PrintAltInfo();
 
+        public override string ToString()
+        {
+            return PrintAltInfo();
+        }
+
 
     }
 
