@@ -14,8 +14,7 @@ namespace RoskildeDyreinternat
         private bool erTrænet;
 
         // Konstruktør med parametre 
-        public Hund(bool kanMedAndreHunde, bool erTrænet, string navn, string race, int chipnummer, string køn, int alder, string helbredstilstand, bool erAdopteret)
-
+      public Hund(string navn, string race,int alder, string køn, int chipnummer, string helbredstilstand, bool erTrænet, bool kanMedAndreHunde, bool erAdopteret)
             : base(navn, race, chipnummer, køn, alder, helbredstilstand, erAdopteret)
         {
             // Brug af 'this.' for at skelne mellem felt og parameter

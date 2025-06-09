@@ -13,7 +13,7 @@ namespace RoskildeDyreinternat.Repositories
         public Dictionary<int, Medarbejder> medarbejderListe = new Dictionary<int, Medarbejder>();
 
         // Felt til at holde referencen til BesøgRepo (for at kunne hente bookinger til kunder)
-        private BesøgRepo besøgRepo;
+        public BesøgRepo besøgRepo;
 
         // Konstruktør: (modtagelse af et BesøgRepo-objekt og gemmer det i feltet ovenfor)
         public BrugerRepo(BesøgRepo besøgRepo)

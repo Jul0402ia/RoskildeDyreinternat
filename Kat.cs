@@ -13,7 +13,7 @@ namespace RoskildeDyreinternat
         private bool skalVæreIndekat;
 
         // Konstruktør med parametre 
-        public Kat(bool kanMedAndreKatte, bool skalVæreIndekat, string navn, string race, int chipnummer, string køn, int alder, string helbredstilstand, bool erAdopteret)
+        public Kat(string navn, string race,int alder, string køn, int chipnummer, string helbredstilstand, bool skalVæreIndekat, bool kanMedAndreKatte, bool erAdopteret)
 
             : base(navn, race, chipnummer, køn, alder, helbredstilstand, erAdopteret)
         {

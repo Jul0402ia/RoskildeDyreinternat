@@ -19,28 +19,30 @@ namespace RoskildeDyreinternat
             DyrRepo repo = new DyrRepo();
 
             //Hunde
-            repo.dyrDictionary.Add(1, new Hund(true, true, "Stella", "Race1", 1, "hun", 3, "sund", false));
-            repo.dyrDictionary.Add(2, new Hund(true, false, "Bob", "Race2", 2, "han", 2, "sund", false));
-            repo.dyrDictionary.Add(3, new Hund(false, false, "Dennis", "Race3", 3, "han", 6, "mangler et ben", false));
-            repo.dyrDictionary.Add(4, new Hund(true, true, "Bella", "Race4", 4, "hun", 4, "sund", false));
-            repo.dyrDictionary.Add(5, new Hund(false, true, "Max", "Race5", 5, "han", 1, "let syg", false));
-            repo.dyrDictionary.Add(6, new Hund(true, false, "Charlie", "Race6", 6, "han", 5, "sund", false));
-            repo.dyrDictionary.Add(7, new Hund(false, true, "Molly", "Race7", 7, "hun", 7, "sund", false));
-            repo.dyrDictionary.Add(8, new Hund(true, true, "Rocky", "Race8", 8, "han", 4, "sund", false));
-            repo.dyrDictionary.Add(9, new Hund(false, false, "Daisy", "Race9", 9, "hun", 3, "sund", false));
-            repo.dyrDictionary.Add(10, new Hund(true, false, "Toby", "Race10", 10, "han", 2, "sund", false));
+            repo.dyrDictionary.Add(1, new Hund("Stella", "Race1", 3, "hun", 1, "sund", true, true, false));
+            repo.dyrDictionary.Add(2, new Hund("Bob", "Race2", 2, "han", 2, "sund", true, false, false));
+            repo.dyrDictionary.Add(3, new Hund("Dennis", "Race3", 6, "han", 3, "mangler et ben", false, false, false));
+            repo.dyrDictionary.Add(4, new Hund("Bella", "Race4", 4, "hun", 4, "sund", true, true, false));
+            repo.dyrDictionary.Add(5, new Hund("Max", "Race5", 1, "han", 5, "let syg", false, true, false));
+            repo.dyrDictionary.Add(6, new Hund("Charlie", "Race6", 5, "han", 6, "sund", true, false, false));
+            repo.dyrDictionary.Add(7, new Hund("Molly", "Race7", 7, "hun", 7, "sund", false, true, false));
+            repo.dyrDictionary.Add(8, new Hund("Rocky", "Race8", 4, "han", 8, "sund", true, true, false));
+            repo.dyrDictionary.Add(9, new Hund("Daisy", "Race9", 3, "hun", 9, "sund", false, false, false));
+            repo.dyrDictionary.Add(10, new Hund("Toby", "Race10", 2, "han", 10, "sund", true, false, false));
+
 
             //Katte
-            repo.dyrDictionary.Add(101, new Kat(true, true, "Denas", "Siamese", 101, "han", 5, "Sund", false));
-            repo.dyrDictionary.Add(102, new Kat(true, false, "Hansen", "Norsk Skovkat", 102, "hun", 2, "Mangler et øje", false));
-            repo.dyrDictionary.Add(103, new Kat(false, true, "Emil", "Maine Coon", 103, "han", 12, "Har sukkersyge", false));
-            repo.dyrDictionary.Add(104, new Kat(true, true, "Luna", "Bengal", 104, "hun", 3, "Sund", false));
-            repo.dyrDictionary.Add(105, new Kat(false, false, "Oscar", "Ragdoll", 105, "han", 7, "Let forkølet", false));
-            repo.dyrDictionary.Add(106, new Kat(true, false, "Mia", "Persian", 106, "hun", 4, "Sund", false));
-            repo.dyrDictionary.Add(107, new Kat(false, true, "Simba", "Savannah", 107, "han", 6, "Sund", false));
-            repo.dyrDictionary.Add(108, new Kat(true, true, "Nala", "Burmese", 108, "hun", 5, "Sund", false));
-            repo.dyrDictionary.Add(109, new Kat(false, false, "Felix", "British Shorthair", 109, "han", 8, "Sund", false));
-            repo.dyrDictionary.Add(110, new Kat(true, false, "Zoe", "Ragdoll", 110, "hun", 3, "Sund", false));
+            repo.dyrDictionary.Add(101, new Kat("Denas", "Siamese", 5, "han", 101, "Sund", true, true, false));
+            repo.dyrDictionary.Add(102, new Kat("Hansen", "Norsk Skovkat", 2, "hun", 102, "Mangler et øje", true, false, false));
+            repo.dyrDictionary.Add(103, new Kat("Emil", "Maine Coon", 12, "han", 103, "Har sukkersyge", false, true, false));
+            repo.dyrDictionary.Add(104, new Kat("Luna", "Bengal", 3, "hun", 104, "Sund", true, true, false));
+            repo.dyrDictionary.Add(105, new Kat("Oscar", "Ragdoll", 7, "han", 105, "Let forkølet", false, false, false));
+            repo.dyrDictionary.Add(106, new Kat("Mia", "Persian", 4, "hun", 106, "Sund", true, false, false));
+            repo.dyrDictionary.Add(107, new Kat("Simba", "Savannah", 6, "han", 107, "Sund", false, true, false));
+            repo.dyrDictionary.Add(108, new Kat("Nala", "Burmese", 5, "hun", 108, "Sund", true, true, false));
+            repo.dyrDictionary.Add(109, new Kat("Felix", "British Shorthair", 8, "han", 109, "Sund", false, false, false));
+            repo.dyrDictionary.Add(110, new Kat("Zoe", "Ragdoll", 3, "hun", 110, "Sund", true, false, false));
+
 
 
             foreach (var entry in repo.dyrDictionary)
