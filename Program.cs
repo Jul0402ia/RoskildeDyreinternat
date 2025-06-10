@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RoskildeDyreinternat.Repositories;
+using RoskildeDyreinternat.UI;
 
 namespace RoskildeDyreinternat
 {
@@ -11,46 +12,20 @@ namespace RoskildeDyreinternat
     {
         static void Main(string[] args)
         {
-            #region Alle Objekter
-            // Opretter en ny instans af KundeRepo
-            BesøgRepo besøgRepo = new BesøgRepo();
-            var brugerRepo = new BrugerRepo(besøgRepo);
+            // 1. Midlertidig null
+            BesøgRepo midlertidigBesøgRepo = null;
 
-            DyrRepo repo = new DyrRepo();
+            // 2. Opret BrugerRepo først
+            BrugerRepo brugerRepo = new BrugerRepo(midlertidigBesøgRepo);
 
-            //Hunde
-            repo.dyrDictionary.Add(1, new Hund("Stella", "Race1", 3, "hun", 1, "sund", true, true, false));
-            repo.dyrDictionary.Add(2, new Hund("Bob", "Race2", 2, "han", 2, "sund", true, false, false));
-            repo.dyrDictionary.Add(3, new Hund("Dennis", "Race3", 6, "han", 3, "mangler et ben", false, false, false));
-            repo.dyrDictionary.Add(4, new Hund("Bella", "Race4", 4, "hun", 4, "sund", true, true, false));
-            repo.dyrDictionary.Add(5, new Hund("Max", "Race5", 1, "han", 5, "let syg", false, true, false));
-            repo.dyrDictionary.Add(6, new Hund("Charlie", "Race6", 5, "han", 6, "sund", true, false, false));
-            repo.dyrDictionary.Add(7, new Hund("Molly", "Race7", 7, "hun", 7, "sund", false, true, false));
-            repo.dyrDictionary.Add(8, new Hund("Rocky", "Race8", 4, "han", 8, "sund", true, true, false));
-            repo.dyrDictionary.Add(9, new Hund("Daisy", "Race9", 3, "hun", 9, "sund", false, false, false));
-            repo.dyrDictionary.Add(10, new Hund("Toby", "Race10", 2, "han", 10, "sund", true, false, false));
+            // 3. Opret DyrRepo
+            DyrRepo dyrRepo = new DyrRepo(brugerRepo); // brugerRepo = IAdgangsKontrol
 
+            // 4. Opret BesøgRepo
+            BesøgRepo besøgRepo = new BesøgRepo(brugerRepo);
 
-            //Katte
-            repo.dyrDictionary.Add(101, new Kat("Denas", "Siamese", 5, "han", 101, "Sund", true, true, false));
-            repo.dyrDictionary.Add(102, new Kat("Hansen", "Norsk Skovkat", 2, "hun", 102, "Mangler et øje", true, false, false));
-            repo.dyrDictionary.Add(103, new Kat("Emil", "Maine Coon", 12, "han", 103, "Har sukkersyge", false, true, false));
-            repo.dyrDictionary.Add(104, new Kat("Luna", "Bengal", 3, "hun", 104, "Sund", true, true, false));
-            repo.dyrDictionary.Add(105, new Kat("Oscar", "Ragdoll", 7, "han", 105, "Let forkølet", false, false, false));
-            repo.dyrDictionary.Add(106, new Kat("Mia", "Persian", 4, "hun", 106, "Sund", true, false, false));
-            repo.dyrDictionary.Add(107, new Kat("Simba", "Savannah", 6, "han", 107, "Sund", false, true, false));
-            repo.dyrDictionary.Add(108, new Kat("Nala", "Burmese", 5, "hun", 108, "Sund", true, true, false));
-            repo.dyrDictionary.Add(109, new Kat("Felix", "British Shorthair", 8, "han", 109, "Sund", false, false, false));
-            repo.dyrDictionary.Add(110, new Kat("Zoe", "Ragdoll", 3, "hun", 110, "Sund", true, false, false));
-
-
-
-            foreach (var entry in repo.dyrDictionary)
-            {
-                Console.WriteLine($"ID: {entry.Key}, Navn: {entry.Value.Navn}");
-                Console.WriteLine(entry.Value.LavLyd());
-            }
-
+            // 5. Sæt BesøgRepo i BrugerRepo (færdiggør koblingen)
+            brugerRepo.besøgRepo = besøgRepo;
 
             //Oprettet kunder
             Kunde kunde1 = new Kunde(99, "Ida", "IdaEmail", "1234567", "Højvej 1", "Kunde", 23, "Mand");
@@ -64,6 +39,16 @@ namespace RoskildeDyreinternat
             Kunde kunde9 = new Kunde(91, "Maria", "maria@mail.com", "22334455", "Pilvej 9", "Kunde", 30, "Kvinde");
             Kunde kunde10 = new Kunde(90, "Peter", "peter@mail.com", "77665544", "Fyrvej 3", "Kunde", 45, "Mand");
 
+            brugerRepo.OpretKunde(kunde1);
+            brugerRepo.OpretKunde(kunde2);
+            brugerRepo.OpretKunde(kunde3);
+            brugerRepo.OpretKunde(kunde4);
+            brugerRepo.OpretKunde(kunde5);
+            brugerRepo.OpretKunde(kunde6);
+            brugerRepo.OpretKunde(kunde7);
+            brugerRepo.OpretKunde(kunde8);
+            brugerRepo.OpretKunde(kunde9);
+            brugerRepo.OpretKunde(kunde10);
 
             //Oprettet medarbejder
             Medarbejder medarbejder1 = new Medarbejder(1, "Emil", "emil@hund.dk", "+45 232323", "Denvej 7", "Frivillig", "Frivillig", 0);
@@ -83,21 +68,87 @@ namespace RoskildeDyreinternat
             Medarbejder medarbejder15 = new Medarbejder(15, "Thomas", "thomas@kat.dk", "+45 22 33 44 55", "Lindevej 15", "Medarbejder", "Dyrpasser", 38);
 
 
+            brugerRepo.OpretMedarbejder(medarbejder1);
+            brugerRepo.OpretMedarbejder(medarbejder2);
+            brugerRepo.OpretMedarbejder(medarbejder3);
+            brugerRepo.OpretMedarbejder(medarbejder4);
+            brugerRepo.OpretMedarbejder(medarbejder5);
+            brugerRepo.OpretMedarbejder(medarbejder6);
+            brugerRepo.OpretMedarbejder(medarbejder7);
+            brugerRepo.OpretMedarbejder(medarbejder8);
+            brugerRepo.OpretMedarbejder(medarbejder9);
+            brugerRepo.OpretMedarbejder(medarbejder10);
+            brugerRepo.OpretMedarbejder(medarbejder11);
+            brugerRepo.OpretMedarbejder(medarbejder12);
+            brugerRepo.OpretMedarbejder(medarbejder13);
+            brugerRepo.OpretMedarbejder(medarbejder14);
+            brugerRepo.OpretMedarbejder(medarbejder15);
+
+            //Hunde
+            List<Hund> hunde = new List<Hund>
+            {
+            new Hund("Stella", "Race1", 3, "hun", 1, "sund", true, true, false),
+            new Hund("Bob", "Race2", 2, "han", 2, "sund", true, false, false),
+            new Hund("Dennis", "Race3", 6, "han", 3, "mangler et ben", false, false, false),
+            new Hund("Bella", "Race4", 4, "hun", 4, "sund", true, true, false),
+            new Hund("Max", "Race5", 1, "han", 5, "let syg", false, true, false),
+            new Hund("Charlie", "Race6", 5, "han", 6, "sund", true, false, false),
+            new Hund("Molly", "Race7", 7, "hun", 7, "sund", false, true, false),
+            new Hund("Rocky", "Race8", 4, "han", 8, "sund", true, true, false),
+            new Hund("Daisy", "Race9", 3, "hun", 9, "sund", false, false, false),
+            new Hund("Toby", "Race10", 2, "han", 10, "sund", true, false, false)
+            };
+
+            foreach (var hund in hunde)
+            {
+                dyrRepo.AddHund(hund, 6); 
+            }
+
+            //Katte
+            List<Kat> katte = new List<Kat>
+            {
+            new Kat("Denas", "Siamese", 5, "han", 101, "Sund", true, true, false),
+            new Kat("Hansen", "Norsk Skovkat", 2, "hun", 102, "Mangler et øje", true, false, false),
+            new Kat("Emil", "Maine Coon", 12, "han", 103, "Har sukkersyge", false, true, false),
+            new Kat("Luna", "Bengal", 3, "hun", 104, "Sund", true, true, false),
+            new Kat("Oscar", "Ragdoll", 7, "han", 105, "Let forkølet", false, false, false),
+            new Kat("Mia", "Persian", 4, "hun", 106, "Sund", true, false, false),
+            new Kat("Simba", "Savannah", 6, "han", 107, "Sund", false, true, false),
+            new Kat("Nala", "Burmese", 5, "hun", 108, "Sund", true, true, false),
+            new Kat("Felix", "British Shorthair", 8, "han", 109, "Sund", false, false, false),
+            new Kat("Zoe", "Ragdoll", 3, "hun", 110, "Sund", true, false, false)
+
+            };
+
+            foreach (var kat in katte)
+            {
+                dyrRepo.AddKat(kat, medarbejder6);
+            }
+
+            foreach (var dyr in dyrRepo.dyrDictionary.Values)
+            {
+                Console.WriteLine($"{dyr.Navn} siger: {dyr.LavLyd()}");
+            }
 
 
             // Eksempel på at booke besøg for kunde1 med forskellige dyr på forskellige datoer:
-            besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(9), kunde1, repo.dyrDictionary[1]);  // Hund Stella
-            besøgRepo.BookBesøg(DateTime.Now.AddDays(2).Date.AddHours(10), kunde1, repo.dyrDictionary[101]); // Kat Denas
-            besøgRepo.BookBesøg(DateTime.Now.AddDays(3).Date.AddHours(11), kunde1, repo.dyrDictionary[2]);  // Hund Bob
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(9), kunde1, dyrRepo.dyrDictionary[1]);  // Hund Stella
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(2).Date.AddHours(10), kunde1, dyrRepo.dyrDictionary[101]); // Kat Denas
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(3).Date.AddHours(11), kunde1, dyrRepo.dyrDictionary[2]);  // Hund Bob
 
             // Kunde2 har kun 1 besøg:
-            besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(14), kunde2, repo.dyrDictionary[3]);
+            besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(14), kunde2, dyrRepo.dyrDictionary[3]);
 
             // Kunde3 har ingen besøg (ingen kald til BookBesøg)
 
             // Udskriv alle bookede besøg:
             Console.WriteLine(besøgRepo.ToString());
-            #endregion
+
+
+
+            // Kør UI
+            UiHovedMenu hovedMenu = new UiHovedMenu(dyrRepo, brugerRepo, besøgRepo);
+            hovedMenu.Start();
         }
     }
 }

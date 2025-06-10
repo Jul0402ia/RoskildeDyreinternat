@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RoskildeDyreinternat.Repositories
 {
@@ -14,17 +16,16 @@ namespace RoskildeDyreinternat.Repositories
         List<Kat> KatteListe = new List<Kat>();
 
 
-
-        // Tjekker om en medarbejder har adgang (arbejdstimer > 0)
-        private bool HarAdgang(Medarbejder medarbejder)
+    private readonly IAdgangsKontrol _adgangsKontrol;
+        public DyrRepo(IAdgangsKontrol adgangsKontrol)
         {
-            return medarbejder != null && medarbejder.Antalarbejdstimer > 0;
+            _adgangsKontrol = adgangsKontrol;
         }
 
         // Tilføj hund(if), hvis medarbejder har adgang og chipnummer ikke findes i forvejen
-        public bool AddHund(Hund hund, Medarbejder medarbejder)
+        public bool AddHund(Hund hund, int medarbejderId)
         {
-            if (!HarAdgang(medarbejder))
+            if (!_adgangsKontrol.HarAdgang(medarbejderId))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -41,11 +42,14 @@ namespace RoskildeDyreinternat.Repositories
             return false;
         }
 
+
+
+
         // Tilføj kat (while-loop), hvis medarbejder har adgang og chipnummer ikke findes i forvejen
 
         public bool AddKat(Kat kat, Medarbejder medarbejder)
         {
-            if (!HarAdgang(medarbejder))
+            if (!_adgangsKontrol.HarAdgang(medarbejder.Id))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -74,7 +78,7 @@ namespace RoskildeDyreinternat.Repositories
         // (if-else) Slet et dyr, hvis medarbejder har adgang
         public bool SletDyr(int chipnummer, Medarbejder medarbejder)
         {
-            if (!HarAdgang(medarbejder))
+            if (!_adgangsKontrol.HarAdgang(medarbejder.Id))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -103,7 +107,7 @@ namespace RoskildeDyreinternat.Repositories
         // Rediger info om et eksisterende dyr
         public bool RedigerDyr(int chipnummer, Medarbejder medarbejder, string nytNavn, string nyRace, int nyAlder, string nytHelbred)
         {
-            if (!HarAdgang(medarbejder))
+            if (!_adgangsKontrol.HarAdgang(medarbejder.Id))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -170,6 +174,28 @@ namespace RoskildeDyreinternat.Repositories
             return fudneHund;
         }
         #endregion
+
+        public Dyr FindDyrByChipnummer(int chipnummer)
+        {
+            // Søg i både katte og hunde
+            foreach (var kat in KatteListe)
+            {
+                if (kat.Chipnummer == chipnummer)
+                {
+                    return kat;
+                }
+            }
+
+            foreach (var hund in HundeListe)
+            {
+                if (hund.Chipnummer == chipnummer)
+                {
+                    return hund;
+                }
+            }
+
+            return null; // Ikke fundet
+        }
 
         #region Filtrering på dyrets alder
         public List<Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
