@@ -141,7 +141,7 @@ namespace RoskildeDyreinternat.Repositories
             }
         }
 
-        #region Søgning på katteliste og hunde liste efter race 
+        #region Filtrering på katteliste og hunde liste efter race - skrevet søg, som er forkert
         public List<Kat> SøgKattePåRace(string race)
         {
             List<Kat> fundneKatte = new List<Kat>();
@@ -165,7 +165,7 @@ namespace RoskildeDyreinternat.Repositories
                 Console.WriteLine(hund.ToString());
             }
         }
-
+        //
         public List<Hund> SøgHundePåRace(string race)
         {
             List<Hund> fudneHund = new List<Hund>();
@@ -203,22 +203,30 @@ namespace RoskildeDyreinternat.Repositories
         }
 
         #region Filtrering på dyrets alder
-        public List<Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
+
+        public Dictionary<int, Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
         {
-            List<Dyr> resultat = new List<Dyr>();
-
-            foreach (Dyr dyr in dyrDictionary.Values)
-            {
-                // Tjek om det er Kat eller Hund, og om alder ligger mellem min og max
-                if ((dyr is Kat && dyr.Alder >= minAlder && dyr.Alder <= maxAlder) ||
-                    (dyr is Hund && dyr.Alder >= minAlder && dyr.Alder <= maxAlder))
-                {
-                    resultat.Add(dyr);
-                }
-            }
-
-            return resultat;
+            return dyrDictionary
+                .Where(d => d.Value.Alder >= minAlder && d.Value.Alder <= maxAlder)
+                .ToDictionary(d => d.Key, d => d.Value);
         }
+
+        //public List<Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
+        //{
+        //    List<Dyr> resultat = new List<Dyr>();
+
+        //    foreach (Dyr dyr in dyrDictionary.Values)
+        //    {
+        //        // Tjek om det er Kat eller Hund, og om alder ligger mellem min og max
+        //        if ((dyr is Kat && dyr.Alder >= minAlder && dyr.Alder <= maxAlder) ||
+        //            (dyr is Hund && dyr.Alder >= minAlder && dyr.Alder <= maxAlder))
+        //        {
+        //            resultat.Add(dyr);
+        //        }
+        //    }
+
+        //    return resultat;
+        //}
         #endregion
 
         #region Filtrering på hunde der er og ikke er trænet, og hunde der kan og ikke kan med andre hunde 
@@ -236,6 +244,7 @@ namespace RoskildeDyreinternat.Repositories
 
             return filtreredeHunde;
         }
+        
 
         public List<Hund> FiltreringPåHundeDerIkkeErTrænet(bool erTrænet)
         {

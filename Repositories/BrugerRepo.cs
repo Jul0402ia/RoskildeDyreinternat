@@ -139,14 +139,21 @@ using System.Threading.Tasks;
                 }
             }
 
-            // Finder en kunde baseret på ID
-            public Kunde FindKundeById(int id)
+        // Finder en kunde baseret på ID
+        public Kunde FindKundeById(int id)
+        {
+            if (kundeListe.TryGetValue(id, out Kunde kunde))
             {
-                return kundeListe.TryGetValue(id, out Kunde kunde) ? kunde : null;
+                return kunde;
             }
+            else
+            {
+                return null;
+            }
+        }
 
-            #region Søgning: Vis brugerens rolle
-            public void SøgningVisBrugerRolle(int id)
+        #region Søgning: Vis brugerens rolle
+        public void SøgningVisBrugerRolle(int id)
             {
                 if (kundeListe.TryGetValue(id, out Kunde kunde))
                 {
