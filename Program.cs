@@ -133,6 +133,37 @@ namespace RoskildeDyreinternat
 
             // Eksempel på at booke besøg for kunde1 med forskellige dyr på forskellige datoer:
             besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(9), kunde1, dyrRepo.dyrDictionary[1]);  // Hund Stella
+            try
+            {
+                // Hent dyret sikkert fra dyrDictionary
+                if (dyrRepo.dyrDictionary.TryGetValue(1, out Dyr dyr))
+                {
+                    // Forsøg at booke besøget
+                    bool success = besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(9), kunde1, dyr);
+
+                    if (!success)
+                    {
+                        Console.WriteLine("Booking mislykkedes.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Fejl: Dyr med chipnummer 1 blev ikke fundet.");
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"Fejl: {ex.ParamName} er null. Besked: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Fejl: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Uventet fejl: {ex.Message}");
+            }
+
             besøgRepo.BookBesøg(DateTime.Now.AddDays(2).Date.AddHours(10), kunde1, dyrRepo.dyrDictionary[101]); // Kat Denas
             besøgRepo.BookBesøg(DateTime.Now.AddDays(3).Date.AddHours(11), kunde1, dyrRepo.dyrDictionary[2]);  // Hund Bob
 

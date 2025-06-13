@@ -6,51 +6,68 @@ using System.Threading.Tasks;
 
 namespace RoskildeDyreinternat.Repositories
 {
-    public class BesøgRepo
+    public class BesøgRepo : IAdgangsKontrol
     {
         public List<Besøg> _besøgListe = new List<Besøg>();
-        // har fået anb. at bruge private readonly, for at beskytte data, men har ikke lært om det endnu
-        public IAdgangsKontrol _adgangsKontrol;
 
-        // Constructor: modtager adgangskontrol (BrugerRepo)
-        public BesøgRepo(IAdgangsKontrol adgangsKontrol)
+        // Reference til BrugerRepo
+        private BrugerRepo brugerRepo;
+
+        public BesøgRepo(BrugerRepo brugerRepo)
         {
-            _adgangsKontrol = adgangsKontrol;
+            this.brugerRepo = brugerRepo;
+        }
+
+        // Kun medarbejdere med arbejdstimer > 0 har adgang
+        public bool HarAdgang(int brugerId)
+        {
+            return brugerRepo.medarbejderListe.TryGetValue(brugerId, out Medarbejder medarbejder)
+                   && medarbejder.Antalarbejdstimer > 0;
         }
 
 
         public bool BookBesøg(DateTime dato, Kunde kunde, Dyr dyr)
         {
-            // Tjek om der mangler kunde eller dyr
-            if (kunde == null)
+            try
             {
-                Console.WriteLine("Der mangler en kunde.");
-                return false;
-            }
+                // Tjek om der mangler kunde eller dyr
+                if (kunde == null)
+                    throw new ArgumentNullException(nameof(kunde), "Der mangler en kunde.");
 
-            if (dyr == null)
-            {
-                Console.WriteLine("Der mangler et dyr.");
-                return false;
-            }
+                if (dyr == null)
+                    throw new ArgumentNullException(nameof(dyr), "Der mangler et dyr.");
 
-            // Tjek om dyret allerede er booket samme dag
-            foreach (Besøg besøg in _besøgListe)
-            {
-                if (besøg.Dyr.Chipnummer == dyr.Chipnummer && besøg.Dato.Date == dato.Date)
+                // Tjek om dyret allerede er booket samme dag
+                foreach (Besøg besøg in _besøgListe)
                 {
-                    Console.WriteLine($"{dyr.Navn} er allerede booket den {dato.ToShortDateString()}.");
-                    return false;
+                    if (besøg.Dyr.Chipnummer == dyr.Chipnummer && besøg.Dato.Date == dato.Date)
+                        throw new InvalidOperationException($"{dyr.Navn} er allerede booket den {dato.ToShortDateString()}.");
                 }
+
+                // Opret og gem besøget
+                Besøg nytBesøg = new Besøg(dato, kunde, dyr);
+                _besøgListe.Add(nytBesøg);
+
+                Console.WriteLine($"Besøg #{nytBesøg.Besøgsnummer} er booket til {dato}.");
+                return true;
             }
-
-            // Opret og gem besøget
-            Besøg nytBesøg = new Besøg(dato, kunde, dyr);
-            _besøgListe.Add(nytBesøg);
-
-            Console.WriteLine($"Besøg #{nytBesøg.Besøgsnummer} er booket til {dato}.");
-            return true;
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"[Fejl] {ex.ParamName}: {ex.Message}");
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"[Fejl] {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Uventet fejl] {ex.Message}");
+                return false;
+            }
         }
+
 
 
         public List<Besøg> HentBesøgForKunde(Kunde kunde)
@@ -120,7 +137,7 @@ namespace RoskildeDyreinternat.Repositories
         //Slet besøg for en kunde, kun som en medarbejder på + 0 timer
         public void SletBesøgForKunde(int kundeId, int medarbejderId)
         {
-            if (!_adgangsKontrol.HarAdgang(medarbejderId))
+            if (!HarAdgang(medarbejderId))
             {
                 Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 arbejdstimer kan slette besøg.");
                 return;

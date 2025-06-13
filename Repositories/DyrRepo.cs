@@ -8,24 +8,29 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RoskildeDyreinternat.Repositories
 {
-    public class DyrRepo
+    public class DyrRepo : IAdgangsKontrol
     {
-        public Dictionary<int, Dyr> dyrDictionary = new Dictionary<int, Dyr>();
+        private BrugerRepo _brugerRepo;
 
+        public Dictionary<int, Dyr> dyrDictionary = new Dictionary<int, Dyr>();
         List<Hund> HundeListe = new List<Hund>();
         List<Kat> KatteListe = new List<Kat>();
 
-
-    private readonly IAdgangsKontrol _adgangsKontrol;
-        public DyrRepo(IAdgangsKontrol adgangsKontrol)
+        public DyrRepo(BrugerRepo brugerRepo)
         {
-            _adgangsKontrol = adgangsKontrol;
+            _brugerRepo = brugerRepo;
+        }
+
+        public bool HarAdgang(int brugerId)
+        {
+            return _brugerRepo.medarbejderListe.TryGetValue(brugerId, out Medarbejder m)
+                   && m.Antalarbejdstimer > 0;
         }
 
         // Tilføj hund(if), hvis medarbejder har adgang og chipnummer ikke findes i forvejen
         public bool AddHund(Hund hund, int medarbejderId)
         {
-            if (!_adgangsKontrol.HarAdgang(medarbejderId))
+            if (!HarAdgang(medarbejderId))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -49,7 +54,7 @@ namespace RoskildeDyreinternat.Repositories
 
         public bool AddKat(Kat kat, Medarbejder medarbejder)
         {
-            if (!_adgangsKontrol.HarAdgang(medarbejder.Id))
+            if (!HarAdgang(medarbejder.Id))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -78,7 +83,7 @@ namespace RoskildeDyreinternat.Repositories
         // (if-else) Slet et dyr, hvis medarbejder har adgang
         public bool SletDyr(int chipnummer, Medarbejder medarbejder)
         {
-            if (!_adgangsKontrol.HarAdgang(medarbejder.Id))
+            if (!HarAdgang(medarbejder.Id))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
@@ -107,7 +112,7 @@ namespace RoskildeDyreinternat.Repositories
         // Rediger info om et eksisterende dyr
         public bool RedigerDyr(int chipnummer, Medarbejder medarbejder, string nytNavn, string nyRace, int nyAlder, string nytHelbred)
         {
-            if (!_adgangsKontrol.HarAdgang(medarbejder.Id))
+            if (!HarAdgang(medarbejder.Id))
             {
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
