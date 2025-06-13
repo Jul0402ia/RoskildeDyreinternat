@@ -197,7 +197,7 @@ namespace RoskildeDyreinternat.UI
             int brugerId = int.Parse(Console.ReadLine());
             try
             {
-                brugerRepo.SøgningVisBrugerInfo(brugerId, aktivMedarbejder.Id);
+                brugerRepo.SøgningVisBrugerInfo(brugerId);
             }
             catch (KeyNotFoundException ex)
             {
@@ -275,7 +275,7 @@ namespace RoskildeDyreinternat.UI
             int brugerId = int.Parse(Console.ReadLine());
             try
             {
-                brugerRepo.SøgningVisBrugerInfo(brugerId, aktivMedarbejder.Id);
+                brugerRepo.SøgningVisBrugerRolle(brugerId);
             }
             catch (KeyNotFoundException ex)
             {
