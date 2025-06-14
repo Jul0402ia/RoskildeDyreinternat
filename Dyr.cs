@@ -18,7 +18,6 @@ namespace RoskildeDyreinternat
         private bool erAdopteret;
 
         // Konstruktør med parametre 
-
         public Dyr(string navn, string race, int chipnummer, string køn, int alder, string helbredstilstand, bool erAdopteret)
         {
             // Brug af 'this.' for at skelne mellem felt og parameter
@@ -72,20 +71,17 @@ namespace RoskildeDyreinternat
             get { return this.erAdopteret; }
             set { this.erAdopteret = value; }
         }
-        //den er lavet til at hunde og katte kan lave lyd (den bliver overrindet i de to klasser)
 
+        //den er lavet til at hunde og katte kan lave lyd (den bliver overrindet i de to klasser)
         public virtual string LavLyd()
         {
         return "Dyret siger: ";
         }
-
         // Overridable ToString med default tekst, men kan override i underklasser
         public override string ToString()
         {
             return $"Navn: {Navn}, Race: {Race}, Chipnummer: {Chipnummer}, Køn: {Køn}, Alder: {Alder}, Helbred: {Helbredstilstand}, Adopteret: {ErAdopteret}";
         }
-
-        
         public abstract int GetChipnummer();
     }
 

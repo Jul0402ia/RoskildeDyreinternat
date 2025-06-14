@@ -29,19 +29,15 @@ namespace RoskildeDyreinternat
         }
 
         public int Antalarbejdstimer
-
         {
             get { return antalarbejdstimer; }
             set { antalarbejdstimer = value; }
-
         }
-
 
         //den printer alt info om medarbejder
         public override string PrintAltInfo()
         {
             return $" ID: {Id}\nNavn: {Navn}\nEmail: {Email}\nAdresse: {Adresse}\nTlf: {Telefon}\nRolle: {Rolle}\nStilling: {Stilling}\nAntalArbejdstimer: {Antalarbejdstimer}";
-
         }
     }
 }

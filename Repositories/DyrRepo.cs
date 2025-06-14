@@ -21,10 +21,17 @@ namespace RoskildeDyreinternat.Repositories
             _brugerRepo = brugerRepo;
         }
 
-        public bool HarAdgang(int brugerId)
+        public bool HarAdgang(int medarbejderId)
         {
-            return _brugerRepo.medarbejderListe.TryGetValue(brugerId, out Medarbejder m)
-                   && m.Antalarbejdstimer > 0;
+            foreach (Medarbejder medarbejder in _brugerRepo.medarbejderListe.Values)
+            {
+                if (medarbejder.Id == medarbejderId && medarbejder.Antalarbejdstimer > 0)
+                {
+                    return true; 
+                }
+            }
+            Console.WriteLine("Nægtet adgang. Kun medarbejeder, som er ansat på +0h har adgang til denne funktion");
+            return false;
         }
 
         // Tilføj hund(if), hvis medarbejder har adgang og chipnummer ikke findes i forvejen
@@ -47,11 +54,7 @@ namespace RoskildeDyreinternat.Repositories
             return false;
         }
 
-
-
-
         // Tilføj kat (while-loop), hvis medarbejder har adgang og chipnummer ikke findes i forvejen
-
         public bool AddKat(Kat kat, Medarbejder medarbejder)
         {
             if (!HarAdgang(medarbejder.Id))
@@ -59,85 +62,133 @@ namespace RoskildeDyreinternat.Repositories
                 Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
                 return false;
             }
-
+            //Starter en tæller "i", som bruges til at gå gennem KatteListe.
             int i = 0;
+            //kører så længe "i" er mindre end antallet af katte i listen (Count).
             while (i < KatteListe.Count)
             {
+                //Tjekker, om den eksisterende kats chip er det samme som den nye kats chip.
                 if (KatteListe[i].Chipnummer == kat.Chipnummer)
                 {
                     Console.WriteLine("Katten findes allerede.");
                     return false;
                 }
+                //Øger "i" med 1, så næste kat i listen bliver tjekket i næste runde.
                 i++;
             }
-
             KatteListe.Add(kat);
             dyrDictionary.Add(kat.Chipnummer, kat);
             return true;
         }
+        #region SLET HVIS ALT VIRKER
+        //SLET HVIS ALT VIRKER
+        //public bool SletDyr(int chipnummer)
+        //{
+        //    // Gennemgå alle nøgler (chipnumre) i dictionary'en
+        //    foreach (int nøgle in dyrDictionary.Keys)
+        //    {
+        //        // Tjek om nøglen matcher det chipnummer, vi vil slette
+        //        if (nøgle == chipnummer)
+        //        {
+        //            // I stedet for Remove, sæt værdien til null
+        //            dyrDictionary[nøgle] = null;
+        //            Console.WriteLine($"Dyret med chipnummer {chipnummer} er slettet (markeret som tomt).");
+        //            return true;
+        //        }
+        //    }
 
-        public bool SletDyr(int chipnummer)
-        {
-            return dyrDictionary.Remove(chipnummer);
-        }
-        // (if-else) Slet et dyr, hvis medarbejder har adgang
+        //    // Hvis chipnummeret ikke blev fundet
+        //    Console.WriteLine($"Intet dyr fundet med chipnummer {chipnummer}.");
+        //    return false;
+        //}
+        #endregion
+
+        // (while) Slet et dyr, hvis medarbejder har adgang
         public bool SletDyr(int chipnummer, Medarbejder medarbejder)
         {
+            // Tjek adgang
             if (!HarAdgang(medarbejder.Id))
             {
-                Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
+                Console.WriteLine("Adgang nægtet.");
                 return false;
             }
-
-            if (dyrDictionary.TryGetValue(chipnummer, out Dyr dyr))
+            // Tjek om chipnummer findes
+            if (!dyrDictionary.ContainsKey(chipnummer))
             {
-                if (dyr is Hund hund)
-                {
-                    HundeListe.Remove(hund);
-                }
-                else if (dyr is Kat kat)
-                {
-                    KatteListe.Remove(kat);
-                }
-
-                dyrDictionary.Remove(chipnummer);
-                Console.WriteLine("Dyr er slettet.");
-                return true;
+                Console.WriteLine($"Dyr med chipnummer {chipnummer} findes ikke.");
+                return false;
             }
+            // Hent dyret
+            Dyr dyr = dyrDictionary[chipnummer];
 
-            Console.WriteLine("Dyr ikke fundet.");
-            return false;
+            // Brug while-loop til at gennemgå HundeListe
+            int i = 0;
+            while (i < HundeListe.Count)
+            {
+                if (HundeListe[i] == dyr)
+                {
+                    HundeListe[i] = null;
+                    break;
+                }
+                i++;
+            }
+            // Brug while-loop til at gennemgå KatteListe
+            int j = 0;
+            while (j < KatteListe.Count)
+            {
+                if (KatteListe[j] == dyr)
+                {
+                    KatteListe[j] = null;
+                    break;
+                }
+                j++;
+            }
+            // Marker dyret som slettet i dictionary
+            dyrDictionary[chipnummer] = null;
+
+            Console.WriteLine($"Dyr med chipnummer {chipnummer} er slettet.");
+            return true;
         }
+
 
         // Rediger info om et eksisterende dyr
         public bool RedigerDyr(int chipnummer, Medarbejder medarbejder, string nytNavn, string nyRace, int nyAlder, string nytHelbred)
         {
+            // Tjek om medarbejderen har adgang
             if (!HarAdgang(medarbejder.Id))
             {
-                Console.WriteLine("Adgang nægtet. Medarbejderen har ingen arbejdstimer.");
+                Console.WriteLine("Adgang nægtet.");
                 return false;
             }
-
-            if (dyrDictionary.TryGetValue(chipnummer, out Dyr dyr))
+            // Gå igennem hele dyrDictionary med foreach
+            foreach (Dyr dyr in dyrDictionary.Values)
             {
-                dyr.Navn = nytNavn;
-                dyr.Race = nyRace;
-                dyr.Alder = nyAlder;
-                dyr.Helbredstilstand = nytHelbred;
-                Console.WriteLine("Dyrets oplysninger er opdateret.");
-                return true;
-            }
+                if (dyr != null && dyr.Chipnummer == chipnummer)
+                {
+                    dyr.Navn = nytNavn;
+                    dyr.Race = nyRace;
+                    dyr.Alder = nyAlder;
+                    dyr.Helbredstilstand = nytHelbred;
 
+                    Console.WriteLine("Dyrets oplysninger er opdateret.");
+                    return true;
+                }
+            }
             Console.WriteLine("Dyr ikke fundet.");
             return false;
         }
 
+
         // Vis kun katte
         public void VisKatte()
         {
-            foreach (var kat in KatteListe)
+            for (int i = 0; i < KatteListe.Count; i++)
             {
-                Console.WriteLine(kat.ToString());
+                // Kun vis katte der ikke er slettet (null)
+                if (KatteListe[i] != null) 
+                {
+                    Console.WriteLine(KatteListe[i].ToString());
+                }
             }
         }
 
@@ -153,30 +204,37 @@ namespace RoskildeDyreinternat.Repositories
                     fundneKatte.Add(kat);
                 }
             }
-
             return fundneKatte;
         }
 
         // Vis kun hunde 
         public void VisHunde()
         {
-            foreach (var hund in HundeListe)
-            {
-                Console.WriteLine(hund.ToString());
-            }
+           int i = 0; 
+           while (i < HundeListe.Count)
+           {
+                if (HundeListe[i] != null)
+                {
+                    Console.WriteLine(HundeListe[i].ToString());
+                }
+                i++;
+           }
         }
-        //
+
+        //Filtrering eller søgning??
         public List<Hund> SøgHundePåRace(string race)
         {
-            List<Hund> fudneHund = new List<Hund>();
-            foreach (var hund in HundeListe)
+            List<Hund> fundneHunde = new List<Hund>();
+
+            for (int i = 0; i < HundeListe.Count; i++)
             {
-                if (hund.Race.ToLower().Contains(race.ToLower()))
+                Hund hund = HundeListe[i];
+                if (hund != null && hund.Race == race)
                 {
-                    fudneHund.Add(hund);
+                    fundneHunde.Add(hund);
                 }
             }
-            return fudneHund;
+            return fundneHunde;
         }
         #endregion
 
@@ -190,7 +248,6 @@ namespace RoskildeDyreinternat.Repositories
                     return kat;
                 }
             }
-
             foreach (var hund in HundeListe)
             {
                 if (hund.Chipnummer == chipnummer)
@@ -198,35 +255,39 @@ namespace RoskildeDyreinternat.Repositories
                     return hund;
                 }
             }
-
-            return null; // Ikke fundet
+            // Ikke fundet
+            return null; 
         }
 
         #region Filtrering på dyrets alder
 
         public Dictionary<int, Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
         {
-            return dyrDictionary
-                .Where(d => d.Value.Alder >= minAlder && d.Value.Alder <= maxAlder)
-                .ToDictionary(d => d.Key, d => d.Value);
+            // En liste til at gemme dyr der passer inden for aldersgrænsen
+            List<Dyr> resulteter = new List<Dyr>();
+
+            // Gå gennem alle dyr i dictionary'en
+            foreach (Dyr dyr in dyrDictionary.Values)
+            {
+                // Tjek at dyret ikke er null (altså ikke slettet), og at dyrets alder er mellem minimum og maksimum
+                if (dyr != null && dyr.Alder >= minAlder && dyr.Alder <= maxAlder)
+                {
+                    resulteter.Add(dyr); // Tilføj til midlertidig resultat-liste
+                }
+            }
+            // Opret en ny dictionary til at returnere resultaterne
+            Dictionary<int, Dyr> resultatDictionary = new Dictionary<int, Dyr>();
+
+            // Gå igennem resultat-listen og læg dyrene ind i dictionary'en igen
+            foreach (Dyr dyr in resulteter)
+            {
+                resultatDictionary[dyr.Chipnummer] = dyr; // Chipnummer som nøgle
+            }
+            // Returnér den færdige dictionary med de filtrerede dyr
+            return resultatDictionary;
         }
 
-        //public List<Dyr> FiltrererIMellemDyretsAlder(int minAlder, int maxAlder)
-        //{
-        //    List<Dyr> resultat = new List<Dyr>();
-
-        //    foreach (Dyr dyr in dyrDictionary.Values)
-        //    {
-        //        // Tjek om det er Kat eller Hund, og om alder ligger mellem min og max
-        //        if ((dyr is Kat && dyr.Alder >= minAlder && dyr.Alder <= maxAlder) ||
-        //            (dyr is Hund && dyr.Alder >= minAlder && dyr.Alder <= maxAlder))
-        //        {
-        //            resultat.Add(dyr);
-        //        }
-        //    }
-
-        //    return resultat;
-        //}
+      
         #endregion
 
         #region Filtrering på hunde der er og ikke er trænet, og hunde der kan og ikke kan med andre hunde 
@@ -234,14 +295,13 @@ namespace RoskildeDyreinternat.Repositories
         {
             List<Hund> filtreredeHunde = new List<Hund>();
 
-            foreach (var hund in HundeListe)
+            foreach (Hund hund in HundeListe)
             {
                 if (hund.ErTrænet == erTrænet)
                 {
                     filtreredeHunde.Add(hund);
                 }
             }
-
             return filtreredeHunde;
         }
         
@@ -250,14 +310,13 @@ namespace RoskildeDyreinternat.Repositories
         {
             List<Hund> filtreredeHunde = new List<Hund>();
 
-            foreach (var hund in HundeListe)
+            foreach (Hund hund in HundeListe)
             {
                 if (hund.ErTrænet != erTrænet)
                 {
                     filtreredeHunde.Add(hund);
                 }
             }
-
             return filtreredeHunde;
         }
 
@@ -265,14 +324,13 @@ namespace RoskildeDyreinternat.Repositories
         {
             List<Hund> filtreredeHunde = new List<Hund>();
 
-            foreach (var hund in HundeListe)
+            foreach (Hund hund in HundeListe)
             {
                 if (hund.KanMedAndreHunde == kanMedAndreHunde)
                 {
                     filtreredeHunde.Add(hund);
                 }
             }
-
             return filtreredeHunde;
         }
 
@@ -280,72 +338,68 @@ namespace RoskildeDyreinternat.Repositories
         {
             List<Hund> filtreredeHunde = new List<Hund>();
 
-            foreach (var hund in HundeListe)
+            foreach (Hund hund in HundeListe)
             {
                 if (hund.KanMedAndreHunde != kanMedAndreHunde)
                 {
                     filtreredeHunde.Add(hund);
                 }
             }
-
             return filtreredeHunde;
         }
         #endregion
+
         #region Filtrering på katte der skal være indekatte, og katte der kan og ikke kan med andre katte 
         public List<Kat> FiltreringPåKatteDerKanMedAndreKatte(bool kanMedAndreKatte)
         {
             List<Kat> filtreredeKatte = new List<Kat>();
 
-            foreach (var kat in KatteListe)
+            foreach (Kat kat in KatteListe)
             {
                 if (kat.KanMedAndreKatte == kanMedAndreKatte)
                 {
                     filtreredeKatte.Add(kat);
                 }
             }
-
             return filtreredeKatte;
         }
         public List<Kat> FiltreringPåKatteDerIkkeKanMedAndreKatte(bool kanMedAndreKatte)
         {
             List<Kat> filtreredeKatte = new List<Kat>();
 
-            foreach (var kat in KatteListe)
+            foreach (Kat kat in KatteListe)
             {
                 if (kat.KanMedAndreKatte != kanMedAndreKatte)
                 {
                     filtreredeKatte.Add(kat);
                 }
             }
-
             return filtreredeKatte;
         }
         public List<Kat> FiltreringPåKatteDerSkalVæreIndekat(bool SkalVæreIndekat)
         {
             List<Kat> filtreredeKatte = new List<Kat>();
 
-            foreach (var kat in KatteListe)
+            foreach (Kat kat in KatteListe)
             {
                 if (kat.SkalVæreIndekat == SkalVæreIndekat)
                 {
                     filtreredeKatte.Add(kat);
                 }
             }
-
             return filtreredeKatte;
         }
         public List<Kat> FiltreringPåKatteDerIkkeSkalVæreIndekat(bool SkalVæreIndekat)
         {
             List<Kat> filtreredeKatte = new List<Kat>();
 
-            foreach (var kat in KatteListe)
+            foreach (Kat kat in KatteListe)
             {
                 if (kat.SkalVæreIndekat != SkalVæreIndekat)
                 {
                     filtreredeKatte.Add(kat);
                 }
             }
-
             return filtreredeKatte;
         }
         #endregion

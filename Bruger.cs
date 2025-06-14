@@ -16,7 +16,6 @@ namespace RoskildeDyreinternat
         private string adresse;
         private string rolle;
 
-
         // Konstruktør med parametre 
 
         public Bruger(int id, string navn, string email, string telefon, string adresse, string rolle)
@@ -60,8 +59,8 @@ namespace RoskildeDyreinternat
         {
             get { return rolle; }
             set { rolle = value; }
-
         }
+
         //den printer alt info om  brugertyper i de subklasser(kunde og medarbejder) hvor den bliver overridet 
         public abstract string PrintAltInfo();
 
@@ -69,10 +68,5 @@ namespace RoskildeDyreinternat
         {
             return PrintAltInfo();
         }
-
-
     }
-
-
-
 }

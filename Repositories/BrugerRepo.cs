@@ -40,33 +40,34 @@ using System.Threading.Tasks;
                     }
                 }
             }
-
             // Hvis vi ikke fandt medarbejderen
             return false;
         }
 
         // Opretter en kunde
         public void OpretKunde(Kunde kunde)
+        {
+            // Gennemgå alle eksisterende kunder for at tjekke, om ID allerede findes
+            foreach (Kunde eksisterendeKunde in kundeListe.Values)
             {
-                if (!kundeListe.ContainsKey(kunde.Id))
+                if (eksisterendeKunde != null && eksisterendeKunde.Id == kunde.Id)
                 {
-                    kundeListe.Add(kunde.Id, kunde);
-                }
-                else
-                {
-                //throw new ArgumentException($"Bruger med ID {kunde.Id} eksisterer allerede.");
-                Console.WriteLine($"Bruger med ID {kunde.Id} eksisterer allerede.");
-                return;
+                    Console.WriteLine($"Bruger med ID {kunde.Id} eksisterer allerede.");
+                    return;
                 }
             }
+            // Hvis ID'et ikke er fundet, tilføj kunden
+            kundeListe[kunde.Id] = kunde;
+            Console.WriteLine($"Kunde {kunde.Navn} med ID {kunde.Id} er oprettet.");
+        }
 
         // Opretter en medarbejder 
-        public void OpretMedarbejder(Medarbejder nyMedarbejder)
+        public void OpretMedarbejder(Medarbejder medarbejder)
         {
             // Tjek manuelt om ID allerede findes
-            foreach (Medarbejder medarbejder in medarbejderListe.Values)
+            foreach (Medarbejder eksisterendeMedarbejder in medarbejderListe.Values)
             {
-                if (medarbejder.Id == nyMedarbejder.Id)
+                if (eksisterendeMedarbejder != null && eksisterendeMedarbejder.Id == medarbejder.Id)
                 {
                     Console.WriteLine("Der findes allerede en medarbejder med det ID.");
                     return;
@@ -74,8 +75,8 @@ using System.Threading.Tasks;
             }
 
             // Tilføj ny medarbejder
-            medarbejderListe.Add(nyMedarbejder.Id, nyMedarbejder);
-            Console.WriteLine($"Medarbejder '{nyMedarbejder.Navn}' er oprettet.");
+            medarbejderListe[medarbejder.Id] = medarbejder;
+            Console.WriteLine($"Medarbejder {medarbejder.Navn} med ID {medarbejder.Id} er oprettet.");
         }
 
         // Opdaterer en medarbejders info
@@ -131,8 +132,8 @@ using System.Threading.Tasks;
                 }
             }
         }
-                
-            
+
+
 
         // Returnerer medarbejder-info som tekst (bruges fx i GUI)
         public string HentMedarbejderInfoSomTekst(int id)
@@ -142,18 +143,19 @@ using System.Threading.Tasks;
                 if (medarbejder.Id == id)
                 {
                     // kan også bruge medarbejder.PrintAltInfo()
-                    return medarbejder.ToString();  
+                    return medarbejder.ToString();
                 }
             }
-
+            // for avanceret at bruge throw new KeyNotFoundException - kender ikke til dette
             //throw new KeyNotFoundException($"Medarbejder med ID {id} blev ikke fundet.");
             Console.WriteLine($"Medarbejder med ID {id} blev ikke fundet.");
-            return null; // Returner null hvis medarbejderen ikke findes
+            return null;
         }
 
         // Sletter en kunde (valgfrit inkl. besøg), kun medarbejder med adgang
         public void SletKunde(int kundeId, int medarbejderId, bool sletBesøg)
         {
+            // Tjek om medarbejderen har adgang
             if (!HarAdgang(medarbejderId))
             {
                 Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 arbejdstimer kan slette kunder.");
@@ -162,23 +164,23 @@ using System.Threading.Tasks;
 
             // Find kunden manuelt
             Kunde fundetKunde = null;
-
             foreach (Kunde kunde in kundeListe.Values)
             {
-                if (kunde.Id == kundeId)
+                if (kunde != null && kunde.Id == kundeId)
                 {
                     fundetKunde = kunde;
                     break;
                 }
             }
 
+            // Hvis ikke fundet
             if (fundetKunde == null)
             {
                 Console.WriteLine($"Kunde med ID {kundeId} blev ikke fundet.");
                 return;
             }
 
-            // Håndter besøg
+            // Hvis besøg også skal slettes
             if (sletBesøg)
             {
                 besøgRepo.SletBesøg(fundetKunde.Id);
@@ -194,17 +196,19 @@ using System.Threading.Tasks;
                 }
             }
 
-            // Fjern kunden
-            bool blevSlettet = kundeListe.Remove(kundeId);
-            if (blevSlettet)
+            // "Slet" kunden ved at sætte værdien til null
+            foreach (int id in kundeListe.Keys)
             {
-                Console.WriteLine($"Kunden {fundetKunde.Navn} (ID: {fundetKunde.Id}) er slettet.");
+                if (id == kundeId)
+                {
+                    kundeListe[id] = null;
+                    Console.WriteLine($"Kunden {fundetKunde.Navn} (ID: {fundetKunde.Id}) er slettet (markeret som tom).");
+                    return;
+                }
             }
-            else
-            {
-                Console.WriteLine("Kunne ikke slette kunden.");
-            }
+            Console.WriteLine("Noget gik galt – kunden kunne ikke slettes.");
         }
+
 
         // Finder en kunde baseret på ID
         public Kunde FindKundeById(int kundeId)
@@ -244,35 +248,45 @@ using System.Threading.Tasks;
             Console.WriteLine($"Bruger med ID {id} blev ikke fundet.");
             return;
         }
+
         #endregion
 
         #region Søgning: Vis info om bruger (kun for medarbejder med adgang)
         public void SøgningVisBrugerInfo(int id)
         {
+            // Adgangskontrol: kun medarbejdere med arbejdstimer over 0 må søge
             if (!HarAdgang(id))
             {
                 Console.WriteLine("Adgang nægtet. Kun medarbejdere med over 0 timer må se brugerinfo.");
                 return;
             }
 
+            // Tjek om det er en kunde
             foreach (Kunde kunde in kundeListe.Values)
             {
-                if (kunde.Id == id)
+                if (kunde != null && kunde.Id == id)
                 {
-                    Console.WriteLine($"Bruger ID: {kunde.Id}\nNavn: {kunde.Navn}\nEmail: {kunde.Email}\nTlf: {kunde.Telefon}\nAdresse: {kunde.Adresse}\nAlder: {kunde.Alder}\nKøn: {kunde.Køn}");
+                    Console.WriteLine($"Bruger ID: {kunde.Id}");
+                    Console.WriteLine($"Navn: {kunde.Navn}");
+                    Console.WriteLine($"Email: {kunde.Email}");
+                    Console.WriteLine($"Tlf: {kunde.Telefon}");
+                    Console.WriteLine($"Adresse: {kunde.Adresse}");
+                    Console.WriteLine($"Alder: {kunde.Alder}");
+                    Console.WriteLine($"Køn: {kunde.Køn}");
 
-                    // Vis bookinger
-                    var kundeBesøg = besøgRepo.HentBesøgForKunde(kunde);
+                    // Vis kundens bookinger
                     Console.WriteLine("\nBookinger:");
+                    var kundeBesøg = besøgRepo.HentBesøgForKunde(kunde);
+
                     if (kundeBesøg.Count == 0)
                     {
                         Console.WriteLine("Ingen bookinger fundet.");
                     }
                     else
                     {
-                        foreach (var besog in kundeBesøg)
+                        foreach (var besøg in kundeBesøg)
                         {
-                            Console.WriteLine($"- Dato: {besog.Dato}, Dyr: {besog.PrintBesogsInfo()}");
+                            Console.WriteLine($"- Dato: {besøg.Dato}, Dyr: {besøg.PrintBesogsInfo()}");
                         }
                     }
 
@@ -280,31 +294,58 @@ using System.Threading.Tasks;
                 }
             }
 
+            // Tjek om det er en medarbejder
             foreach (Medarbejder medarbejder in medarbejderListe.Values)
             {
-                if (medarbejder.Id == id)
+                if (medarbejder != null && medarbejder.Id == id)
                 {
-                    Console.WriteLine($"Bruger ID: {medarbejder.Id}\nNavn: {medarbejder.Navn}\nEmail: {medarbejder.Email}\nTlf: {medarbejder.Telefon}\nAdresse: {medarbejder.Adresse}\nRolle: {medarbejder.Rolle}\nStilling: {medarbejder.Stilling}\nArbejdstimer: {medarbejder.Antalarbejdstimer}");
+                    Console.WriteLine($"Bruger ID: {medarbejder.Id}");
+                    Console.WriteLine($"Navn: {medarbejder.Navn}");
+                    Console.WriteLine($"Email: {medarbejder.Email}");
+                    Console.WriteLine($"Tlf: {medarbejder.Telefon}");
+                    Console.WriteLine($"Adresse: {medarbejder.Adresse}");
+                    Console.WriteLine($"Rolle: {medarbejder.Rolle}");
+                    Console.WriteLine($"Stilling: {medarbejder.Stilling}");
+                    Console.WriteLine($"Arbejdstimer: {medarbejder.Antalarbejdstimer}");
                     return;
                 }
             }
 
+            // Ingen bruger fundet
             Console.WriteLine($"Bruger med ID {id} blev ikke fundet.");
-            return;
         }
+
 
         #endregion
 
         #region Filtrering: Medarbejdere & Frivillige
-        public List<Medarbejder> FiltreringMedarbejdereMedAdgang()
+        public List<Medarbejder> FiltreringMedarbejdereMedAdgang(int antalArbejdstimer)
+        {
+            List<Medarbejder> resulterer = new List<Medarbejder>();
+
+            foreach (Medarbejder medarbejder in medarbejderListe.Values)
             {
-                return medarbejderListe.Values.Where(m => HarAdgang(m.Id)).ToList();
+                if (medarbejder != null && medarbejder.Antalarbejdstimer > 0)
+                {
+                    resulterer.Add(medarbejder);
+                }
             }
 
-            public List<Medarbejder> FiltreringFrivillige()
+            return resulterer;
+        }
+
+        public List<Medarbejder> FiltreringFrivillige(int antalArbejdstimer)
             {
-                return medarbejderListe.Values.Where(m => !HarAdgang(m.Id)).ToList();
+            List<Medarbejder> frivillige = new List<Medarbejder>();
+            foreach (Medarbejder medarbejder in medarbejderListe.Values)
+            {
+                if (medarbejder != null && medarbejder.Antalarbejdstimer == 0)
+                {
+                    frivillige.Add(medarbejder);
+                }
             }
+            return frivillige;
+        }
             #endregion
         }
     }

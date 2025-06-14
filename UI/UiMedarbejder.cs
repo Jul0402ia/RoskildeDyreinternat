@@ -209,7 +209,10 @@ namespace RoskildeDyreinternat.UI
         #region 5.Vis alle medarbejder  
         private void VisMedarbejdereMedAdgang()
         {
-            var ansatte = brugerRepo.FiltreringMedarbejdereMedAdgang();
+            // Her skal du selv vælge tallet – f.eks. 0 eller 5, afhængigt af hvad du mener med adgang
+            int antalArbejdstimer = 0;
+            var ansatte = brugerRepo.FiltreringMedarbejdereMedAdgang(0);
+
             Console.WriteLine("Medarbejdere med adgang (arbejdstimer > 0):");
             foreach (var m in ansatte)
             {
@@ -221,7 +224,8 @@ namespace RoskildeDyreinternat.UI
         #region 6.Vis alle frivillige
         private void VisFrivillige()
         {
-            var frivillige = brugerRepo.FiltreringFrivillige();
+            var frivillige = brugerRepo.FiltreringFrivillige(0);  
+
             Console.WriteLine("Frivillige (arbejdstimer = 0):");
             foreach (var f in frivillige)
             {

@@ -12,7 +12,6 @@ namespace RoskildeDyreinternat
         private int alder;
         private string køn;
 
-
         // Konstruktør med parametre 
         public Kunde(int id, string navn, string email, string telefon, string adresse, string rolle, int alder, string køn)
             : base(id, navn, email, telefon, adresse, rolle)
@@ -20,9 +19,8 @@ namespace RoskildeDyreinternat
             // Brug af 'this.' for at skelne mellem felt og parameter
             this.alder = alder;
             this.køn = køn;
-
-
         }
+
         //Properties 
         public int Alder
         {
@@ -41,7 +39,5 @@ namespace RoskildeDyreinternat
             return $" ID: {Id}\nNavn: {Navn}\nEmail: {Email}\nAdresse: {Adresse}\nTlf: {Telefon}\nRolle: {Rolle}\nAlder: {Alder}\nKøn: {Køn}";
 
         }
-
-
     }
 }
