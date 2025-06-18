@@ -26,6 +26,8 @@ namespace RoskildeDyreinternat
 
             // 5. Sæt BesøgRepo i BrugerRepo (færdiggør koblingen)
             brugerRepo.besøgRepo = besøgRepo;
+          
+
 
             //Oprettet kunder
             Kunde kunde1 = new Kunde(99, "Ida", "IdaEmail", "1234567", "Højvej 1", "Kunde", 23, "Mand");
@@ -87,16 +89,16 @@ namespace RoskildeDyreinternat
             //Hunde
             List<Hund> hunde = new List<Hund>
             {
-            new Hund("Stella", "Race1", 3, "hun", 1, "sund", true, true, false),
-            new Hund("Bob", "Race2", 2, "han", 2, "sund", true, false, false),
-            new Hund("Dennis", "Race3", 6, "han", 3, "mangler et ben", false, false, false),
-            new Hund("Bella", "Race4", 4, "hun", 4, "sund", true, true, false),
-            new Hund("Max", "Race5", 1, "han", 5, "let syg", false, true, false),
-            new Hund("Charlie", "Race6", 5, "han", 6, "sund", true, false, false),
-            new Hund("Molly", "Race7", 7, "hun", 7, "sund", false, true, false),
-            new Hund("Rocky", "Race8", 4, "han", 8, "sund", true, true, false),
-            new Hund("Daisy", "Race9", 3, "hun", 9, "sund", false, false, false),
-            new Hund("Toby", "Race10", 2, "han", 10, "sund", true, false, false)
+            new Hund("Stella", "Bulldog", 3, "hun", 1, "sund", true, true, false),
+            new Hund("Bob", "Ukendt", 2, "han", 2, "sund", true, false, false),
+            new Hund("Dennis", "Ukendt", 6, "han", 3, "mangler et ben", false, false, false),
+            new Hund("Bella", "Bulldog", 4, "hun", 4, "sund", true, true, false),
+            new Hund("Max", "Puddel", 1, "han", 5, "let syg", false, true, false),
+            new Hund("Charlie", "Bulldog", 5, "han", 6, "sund", true, false, false),
+            new Hund("Molly", "Puddel", 7, "hun", 7, "sund", false, true, false),
+            new Hund("Rocky", "Bulldog", 4, "han", 8, "sund", true, true, false),
+            new Hund("Daisy", "Puddel", 3, "hun", 9, "sund", false, false, false),
+            new Hund("Toby", "Bulldog", 2, "han", 10, "sund", true, false, false)
             };
 
             foreach (var hund in hunde)
@@ -130,6 +132,33 @@ namespace RoskildeDyreinternat
                 Console.WriteLine($"{dyr.Navn} siger: {dyr.LavLyd()}");
             }
 
+          
+            Console.WriteLine("=== TEST AF DYRMETODER ===");
+
+            // Test af TælAktiveHunde
+            Console.WriteLine($"Antal aktive hunde: {dyrRepo.TælAktiveHunde()}");
+
+            // Test af SkrivAlleHundNavne
+            Console.WriteLine("Navne på alle hunde:");
+            dyrRepo.SkrivAlleHundNavne();
+
+            // Test af SkrivSundeKatte
+            Console.WriteLine("Sunde katte:");
+            dyrRepo.SkrivSundeKatte();
+
+            // Test af FindFørsteKatMedAlder
+            int søgtAlder = 3;
+            Kat fundetKat = dyrRepo.FindFørsteKatMedAlder(søgtAlder);
+            if (fundetKat != null)
+                Console.WriteLine($"Første kat med alder {søgtAlder} er: {fundetKat.Navn}");
+            else
+                Console.WriteLine($"Ingen kat med alder {søgtAlder} blev fundet.");
+
+            // Test af VisDyrEfterType
+            Console.WriteLine("Vis alle katte:");
+            dyrRepo.VisDyrEfterType("kat");
+
+            
 
             // Eksempel på at booke besøg for kunde1 med forskellige dyr på forskellige datoer:
             besøgRepo.BookBesøg(DateTime.Now.AddDays(1).Date.AddHours(9), kunde1, dyrRepo.dyrDictionary[1]);  // Hund Stella
@@ -176,10 +205,12 @@ namespace RoskildeDyreinternat
             Console.WriteLine(besøgRepo.ToString());
 
 
+;
+            
 
-            // Kør UI
-            UiHovedMenu hovedMenu = new UiHovedMenu(dyrRepo, brugerRepo, besøgRepo);
-            hovedMenu.Start();
+            //// Kør UI
+            //UiHovedMenu hovedMenu = new UiHovedMenu(dyrRepo, brugerRepo, besøgRepo);
+            //hovedMenu.Start();
         }
     }
 }

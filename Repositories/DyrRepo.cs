@@ -33,8 +33,83 @@ namespace RoskildeDyreinternat.Repositories
             Console.WriteLine("Nægtet adgang. Kun medarbejeder, som er ansat på +0h har adgang til denne funktion");
             return false;
         }
+        //Meotde for at tælle hunde, som findes i HundeListe (for)
+        public int TælAktiveHunde()
+        {
+            int antal = 0;
+            for (int i = 0; i < HundeListe.Count; i++)
+            {
+                if (HundeListe[i] != null)
+                    antal++;
+            }
+            return antal;
+        }
 
-        // Tilføj hund(if), hvis medarbejder har adgang og chipnummer ikke findes i forvejen
+        //Meotde for at finde den første kat med en bestemt alder (while)
+        public Kat FindFørsteKatMedAlder(int alder)
+        {
+            int i = 0;
+            while (i < KatteListe.Count)
+            {
+                if (KatteListe[i] != null && KatteListe[i].Alder == alder)
+                    return KatteListe[i];
+                i++;
+            }
+            return null;
+        }
+        //Metode for at vise navne på alle hunde (do-while)
+        public void SkrivAlleHundNavne()
+        {
+            if (HundeListe.Count == 0) return;
+
+            int i = 0;
+            do
+            {
+                if (HundeListe[i] != null)
+                    Console.WriteLine(HundeListe[i].Navn);
+                i++;
+            }
+            while (i < HundeListe.Count);
+        }
+
+        //Metode for at skrive navne på alle katte, der er sunde igennem at gennemgå hele listen (foreach)
+        public void SkrivSundeKatte()
+        {
+            foreach (Kat kat in KatteListe)
+            {
+                if (kat != null && kat.Helbredstilstand.ToLower() == "sund")
+                    Console.WriteLine(kat.Navn);
+            }
+        }
+
+        public void VisDyrEfterType(string type)
+        {
+            if (type.ToLower() == "hund")
+            {
+                Console.WriteLine("Alle hunde:");
+                for (int i = 0; i < HundeListe.Count; i++)
+                {
+                    if (HundeListe[i] != null)
+                        Console.WriteLine(HundeListe[i].ToString());
+                }
+            }
+            else if (type.ToLower() == "kat")
+            {
+                Console.WriteLine("Alle katte:");
+                for (int i = 0; i < KatteListe.Count; i++)
+                {
+                    if (KatteListe[i] != null)
+                        Console.WriteLine(KatteListe[i].ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ukendt type. Skriv 'hund' eller 'kat'.");
+            }
+        }
+
+
+        // Tilføj hund, hvis medarbejder har adgang og chipnummer ikke findes i forvejen
         public bool AddHund(Hund hund, int medarbejderId)
         {
             if (!HarAdgang(medarbejderId))
